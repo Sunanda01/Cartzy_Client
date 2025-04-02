@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import ProductFilter from "./filter";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,16 +10,34 @@ import { ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { sortOptions } from "@/config";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllFeaturedProducts } from "@/store/product-slice";
+import { fetchAllFeaturedProducts, fetchProductDetails } from "@/store/product-slice";
 import ShoppingProductTile from "@/components/shopping-view/product-tile";
 import { useSearchParams } from "react-router-dom";
+import ProductFilter from "../../components/shopping-view/filter";
 
 function ShoppingListing() {
   const dispatch = useDispatch();
-  const { productsList } = useSelector((state) => state.shopProducts);
+  const { productsList,productDetails } = useSelector((state) => state.shopProducts);
   const [filters, setFilters] = useState({});
   const [sort, setSort] = useState(null);
   const [searchParams,setSearchParams]=useSearchParams();
+
+  function handleGetProductDetails(getCurrentProductId){
+    console.log(getCurrentProductId);
+    dispatch(fetchProductDetails(getCurrentProductId));
+  }
+
+  function createSearchParamsHelper(filterParams){
+    const queryParams=[];
+    for(const[key,value] of Object.entries(filterParams)){
+      if(Array.isArray(value) && value.length>0 ){
+        const paramValue=value.join(',')
+        queryParams.push(`${key}=${encodeURIComponent(paramValue)}`);
+      }
+    }
+    console.log(queryParams,'qp');
+    return queryParams.join('&');
+  }
 
   function handleSort(value){
     setSort(value);
@@ -48,17 +65,23 @@ function ShoppingListing() {
     sessionStorage.setItem("filters", JSON.stringify(cpyFilters));
   }
 
-  useEffect(()=>{setSort("price-lowtohigh")
+  useEffect(()=>{setSort("price-lowtohigh");
     setFilters(JSON.parse(sessionStorage.getItem('filters')) || {});
   },[])
 
-useEffect(()=>{},[filters])
+useEffect(()=>{
+  if(filters && Object.keys(filters).length > 0){
+    const createQueryString=createSearchParamsHelper(filters)
+    setSearchParams(new URLSearchParams(createQueryString))
+  }
+},[filters])
 
   useEffect(() => {
-    dispatch(fetchAllFeaturedProducts());
-  }, [dispatch]);
+    if(filters !== null && sort!==null)
+    dispatch(fetchAllFeaturedProducts({filterParams:filters,sortParams:sort}));
+  }, [dispatch,filters,sort]);
 
-  console.log(filters,searchParams);
+  console.log(filters,searchParams,productDetails )   
   return (
     <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6">
       <ProductFilter filters={filters} handleFilters={handleFilters}/>
@@ -93,7 +116,7 @@ useEffect(()=>{},[filters])
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
           {productsList && productsList.length > 0
             ? productsList.map((productList) => (
-                <ShoppingProductTile product={productList} />
+                <ShoppingProductTile product={productList} handleGetProductDetails={handleGetProductDetails} />
               ))
             : null}
         </div>
