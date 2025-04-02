@@ -14,17 +14,20 @@ import { fetchAllFeaturedProducts, fetchProductDetails } from "@/store/product-s
 import ShoppingProductTile from "@/components/shopping-view/product-tile";
 import { useSearchParams } from "react-router-dom";
 import ProductFilter from "../../components/shopping-view/filter";
+import ProductDetailsDialog from "@/components/shopping-view/productDetail";
 
 function ShoppingListing() {
   const dispatch = useDispatch();
+  const productDetailDispatch = useDispatch();
   const { productsList,productDetails } = useSelector((state) => state.shopProducts);
   const [filters, setFilters] = useState({});
   const [sort, setSort] = useState(null);
   const [searchParams,setSearchParams]=useSearchParams();
+  const [open,setOpen]=useState(false);
 
   function handleGetProductDetails(getCurrentProductId){
     console.log(getCurrentProductId);
-    dispatch(fetchProductDetails(getCurrentProductId));
+    productDetailDispatch(fetchProductDetails(getCurrentProductId));
   }
 
   function createSearchParamsHelper(filterParams){
@@ -64,6 +67,10 @@ function ShoppingListing() {
     setFilters(cpyFilters);
     sessionStorage.setItem("filters", JSON.stringify(cpyFilters));
   }
+
+  useEffect(()=>{
+    if(productDetails!==null) setOpen(true);
+  },[productDetails]);
 
   useEffect(()=>{setSort("price-lowtohigh");
     setFilters(JSON.parse(sessionStorage.getItem('filters')) || {});
@@ -121,6 +128,7 @@ useEffect(()=>{
             : null}
         </div>
       </div>
+      <ProductDetailsDialog open={open} setOpen={setOpen} productDetails={productDetails}/>
     </div>
   );
 }
