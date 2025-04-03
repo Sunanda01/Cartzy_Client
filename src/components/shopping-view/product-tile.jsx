@@ -3,10 +3,17 @@ import { Card, CardContent, CardFooter } from "../ui/card";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 
-function ShoppingProductTile({ product,handleGetProductDetails }) {
+function ShoppingProductTile({
+  product,
+  handleGetProductDetails,
+  handleAddToCart,
+}) {
   return (
     <Card className="w-full mx-auto max-w-sm">
-      <div className="relative cursor-pointer" onClick={()=>handleGetProductDetails(product?._id)}>
+      <div
+        className="relative cursor-pointer"
+        onClick={() => handleGetProductDetails(product?._id)}
+      >
         <img
           src={product?.image}
           alt={product?.title}
@@ -25,7 +32,9 @@ function ShoppingProductTile({ product,handleGetProductDetails }) {
           <span className="text-sm text-muted-foreground">
             {product?.category}
           </span>
-          <span className="text-sm text-muted-foreground">{product?.brand}</span>
+          <span className="text-sm text-muted-foreground">
+            {product?.brand}
+          </span>
         </div>
         <div className="flex justify-between items-center mb-2">
           <span
@@ -41,7 +50,12 @@ function ShoppingProductTile({ product,handleGetProductDetails }) {
         </div>
       </CardContent>
       <CardFooter className="flex justify-between items-center">
-        <Button className="w-full" >Add to Cart</Button>
+        <Button
+          className="w-full"
+          onClick={() => handleAddToCart(product?._id)}
+        >
+          Add to Cart
+        </Button>
       </CardFooter>
     </Card>
   );

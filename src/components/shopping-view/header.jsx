@@ -1,5 +1,5 @@
 import { HousePlug, LogOut, Menu, ShoppingCart, UserCog } from "lucide-react";
-import React from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
@@ -17,6 +17,8 @@ import { Avatar } from "../ui/avatar";
 import { AvatarFallback } from "../ui/avatar";
 import { logoutUser } from "@/store/auth-slice";
 import { toast } from "sonner";
+import UserCartWrapper from "./cart-wrapper";
+import { fetchCart } from "@/store/cart-slice";
 
 function MenuItems() {
   return (
@@ -35,18 +37,33 @@ function MenuItems() {
 }
 
 function HeaderRightContent() {
-  const {user}=useSelector((state)=>state.auth);
-  const naviagte=useNavigate();
-  const dispatch=useDispatch();
-  function handleLogout(){
-    dispatch(logoutUser()).then((data)=>{toast.success(data?.payload.msg)});
+  const [openCart, setOpenCart] = useState(false);
+  const { cartItems } = useSelector((state) => state.shopCart);
+  const { user } = useSelector((state) => state.auth);
+  const naviagte = useNavigate();
+  const dispatch = useDispatch();
+  function handleLogout() {
+    dispatch(logoutUser()).then((data) => {
+      toast.success(data?.payload.msg);
+    });
   }
+  useEffect(() => dispatch(fetchCart(user?.id)), [dispatch]);
+  console.log(cartItems?.items, "jdhfjkdshfjhdsjf");
   return (
     <div className="flex flex-col lg:flex-row gap-4 lg:items-center">
-      <Button varient="outline" size="icon">
-        <ShoppingCart className="h-6 w-6" />
-        <span className="sr-only">User Cart</span>
-      </Button>
+      <Sheet open={openCart} onOpenChange={() => setOpenCart(false)}>
+        <Button varient="outline" size="icon" onClick={() => setOpenCart(true)}>
+          <ShoppingCart className="h-6 w-6" />
+          <span className="sr-only">User Cart</span>
+        </Button>
+        <UserCartWrapper
+          cartItems={
+            cartItems && cartItems?.items && cartItems?.items.length > 0
+              ? cartItems?.items
+              : []
+          }
+        />
+      </Sheet>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Avatar className="bg-black flex items-center justify-center">
@@ -58,9 +75,15 @@ function HeaderRightContent() {
         <DropdownMenuContent side="right">
           <DropdownMenuLabel>Logged In As {user?.userName}</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={()=>naviagte('/auth/logout')}><UserCog className="h-4 w-4 mr-2"/>Account</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => naviagte("/auth/logout")}>
+            <UserCog className="h-4 w-4 mr-2" />
+            Account
+          </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={handleLogout}><LogOut className="h-4 w-4 mr-2"/>LogOut</DropdownMenuItem>
+          <DropdownMenuItem onClick={handleLogout}>
+            <LogOut className="h-4 w-4 mr-2" />
+            LogOut
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
@@ -86,16 +109,16 @@ function ShoppingHeader() {
           <SheetContent side="left" className="w-full max-w-xs flex flex-col">
             <MenuItems />
             <div>
-            <HeaderRightContent/>
+              <HeaderRightContent />
             </div>
           </SheetContent>
         </Sheet>
         <div className="hidden lg:block">
           <MenuItems />
         </div>
-          <div className="hidden lg:block">
-            <HeaderRightContent/>
-          </div>
+        <div className="hidden lg:block">
+          <HeaderRightContent />
+        </div>
       </div>
     </header>
   );
