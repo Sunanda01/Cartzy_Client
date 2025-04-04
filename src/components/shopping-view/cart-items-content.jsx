@@ -2,18 +2,29 @@ import React from "react";
 import { Button } from "../ui/button";
 import { Minus, Plus, Trash } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteCart } from "@/store/cart-slice";
+import { deleteCart, updateCart } from "@/store/cart-slice";
 import { toast } from "sonner";
 
 function UserCartItemContent({ cartItems }) {
-    const dispatch=useDispatch();
-    const{user}=useSelector((state)=>state.auth);
-    function handleCartItemDelete(productId){
-        dispatch(deleteCart({userId:user?.id,productId})).then((data)=>{
-            if(data?.payload.success) toast.success(data?.payload.msg);
-        });
-
-    }
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
+  function handleCartItemDelete(productId) {
+    dispatch(deleteCart({ userId: user?.id, productId })).then((data) => {
+      if (data?.payload.success) toast.success(data?.payload.msg);
+    });
+  }
+  function handleUpdateQuantity(cartItems, typeOfAction) {
+    dispatch(
+      updateCart({
+        userId: user?.id,
+        productId: cartItems?.productId,
+        quantity:
+          typeOfAction === "plus"
+            ? cartItems?.quantity + 1
+            : cartItems?.quantity - 1,
+      })
+    ).then((data) => toast.success(data?.payload.msg));
+  }
   return (
     <div className="flex items-center space-x-4">
       <img
@@ -28,6 +39,8 @@ function UserCartItemContent({ cartItems }) {
             varient="outline"
             size="icon"
             className="h-8 w-8 rounded-full"
+            disabled={cartItems?.quantity===1}
+            onClick={() => handleUpdateQuantity(cartItems, "minus")}
           >
             <Minus />
             <span className="sr-only">Decrease</span>
@@ -37,6 +50,7 @@ function UserCartItemContent({ cartItems }) {
             varient="outline"
             size="icon"
             className="h-8 w-8 rounded-full"
+            onClick={() => handleUpdateQuantity(cartItems, "plus")}
           >
             <Plus />
             <span className="sr-only">Increase</span>
@@ -45,9 +59,17 @@ function UserCartItemContent({ cartItems }) {
         <div className="flex flex-col items-end ">
           <p className="font-semibold">
             $
-            {((cartItems?.salePrice > 0 ? cartItems?.salePrice : cartItems?.price)*cartItems?.quantity).toFixed(2)}
+            {(
+              (cartItems?.salePrice > 0
+                ? cartItems?.salePrice
+                : cartItems?.price) * cartItems?.quantity
+            ).toFixed(2)}
           </p>
-          <Trash onClick={()=>handleCartItemDelete(cartItems?.productId)} className="cursor-pointer mt-1" size={20}/>
+          <Trash
+            onClick={() => handleCartItemDelete(cartItems?.productId)}
+            className="cursor-pointer mt-1"
+            size={20}
+          />
         </div>
       </div>
     </div>
