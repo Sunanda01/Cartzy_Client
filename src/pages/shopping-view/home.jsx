@@ -1,4 +1,10 @@
+import ShoppingProductTile from "@/components/shopping-view/product-tile";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  fetchAllFeaturedProducts,
+  fetchProductDetails,
+} from "@/store/product-slice";
 import {
   Airplay,
   BabyIcon,
@@ -14,15 +20,15 @@ import {
   WashingMachine,
   WatchIcon,
 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import bannerOne from "../../assets/banner-1.webp";
 import bannerTwo from "../../assets/banner-2.webp";
 import bannerThree from "../../assets/banner-3.webp";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchAllFeaturedProducts } from "@/store/product-slice";
-import ShoppingProductTile from "@/components/shopping-view/product-tile";
-import { useNavigate } from "react-router-dom";
+import { addToCart, fetchCart } from "@/store/cart-slice";
+import { toast } from "sonner";
+import ProductDetailsDialog from "@/components/shopping-view/productDetail";
 
 const categoriesWithIcon = [
   { id: "men", label: "Men", icon: ShirtIcon },
@@ -41,11 +47,40 @@ const brandsWithIcon = [
   { id: "h&m", label: "H&M", icon: Heater },
 ];
 function ShoppingHome() {
+  const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const slides = [bannerOne, bannerTwo, bannerThree];
   const [currentSlide, setCurrentSlide] = useState(0);
-  const { productsList } = useSelector((state) => state.shopProducts);
+  const { productsList, productDetails } = useSelector(
+    (state) => state.shopProducts
+  );
   const navigate = useNavigate();
+  const { user } = useSelector((state) => state.auth);
+
+  function handleAddToCart(getCurrentProductId) {
+    console.log(getCurrentProductId, "id");
+    dispatch(
+      addToCart({
+        userId: user?.id,
+        productId: getCurrentProductId,
+        quantity: 1,
+      })
+    ).then((data) => {
+      console.log(data);
+      if (data?.payload.success) {
+        toast.success(data?.payload.msg);
+        dispatch(fetchCart(user?.id));
+      } else {
+        toast.error(data?.payload.msg);
+      }
+    });
+  }
+
+  function handleGetProductDetails(getCurrentProductId) {
+    console.log(getCurrentProductId);
+    dispatch(fetchProductDetails(getCurrentProductId));
+  }
+
   function handleNavigateToListingPage(getCurrentItem, section) {
     sessionStorage.removeItem("filters");
     const currentFilter = {
@@ -70,6 +105,10 @@ function ShoppingHome() {
       })
     );
   }, [dispatch]);
+
+  useEffect(() => {
+    if (productDetails !== null) setOpen(true);
+  }, [productDetails]);
 
   console.log(productsList, "productsList");
   return (
@@ -159,15 +198,20 @@ function ShoppingHome() {
             {productsList && productsList.length > 0
               ? productsList.map((productItem) => (
                   <ShoppingProductTile
-                    // handleGetProductDetails={handleGetProductDetails}
+                    handleGetProductDetails={handleGetProductDetails}
                     product={productItem}
-                    // handleAddtoCart={handleAddtoCart}
+                    handleAddToCart={handleAddToCart}
                   />
                 ))
               : null}
           </div>
         </div>
       </section>
+      <ProductDetailsDialog
+        open={open}
+        setOpen={setOpen}
+        productDetails={productDetails}
+      />
     </div>
   );
 }
