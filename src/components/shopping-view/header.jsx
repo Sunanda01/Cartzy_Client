@@ -93,7 +93,7 @@ function HeaderRightContent() {
         <DropdownMenuContent side="right">
           <DropdownMenuLabel>Logged In As {user?.userName}</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => naviagte("/auth/account")}>
+          <DropdownMenuItem onClick={() => naviagte("/shop/account")}>
             <UserCog className="h-4 w-4 mr-2" />
             Account
           </DropdownMenuItem>
