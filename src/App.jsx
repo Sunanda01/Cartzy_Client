@@ -18,6 +18,9 @@ import CheckAuth from "./components/common/check-auth";
 import { useEffect } from "react";
 import { checkAuth } from "./store/auth-slice";
 import { Skeleton } from "@/components/ui/skeleton";
+import PaypalReturnPage from "./components/shopping-view/paypal-return";
+import PaypalCancelPage from "./components/shopping-view/paypal-cancel";
+import PaymentSuccess from "./components/shopping-view/payment-success";
 
 function App() {
   const { user, isAuthenticated, isLoading } = useSelector((state) => state.auth);
@@ -73,6 +76,9 @@ function App() {
           <Route path="checkout" element={<ShoppingCheckout />} />
           <Route path="home" element={<ShoppingHome />} />
           <Route path="listing" element={<ShoppingListing />} />
+          <Route path="paypal-return" element={<PaypalReturnPage/>}/>
+          <Route path="paypal-cancel" element={<PaypalCancelPage/>}/>
+          <Route path="payment-success" element={<PaymentSuccess/>}/>
         </Route>
 
         <Route path="/unauth-page" element={<UnauthPage />} />

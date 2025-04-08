@@ -22,11 +22,11 @@ import { fetchCart } from "@/store/cart-slice";
 import { Label } from "../ui/label";
 
 function MenuItems() {
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   function handleNavigate(getCurrentMenuItem) {
     sessionStorage.removeItem("filters");
     const currentFilter =
-      getCurrentMenuItem.id !== "home" 
+      getCurrentMenuItem.id !== "home"
         ? {
             category: [getCurrentMenuItem.id],
           }
@@ -34,16 +34,13 @@ function MenuItems() {
 
     sessionStorage.setItem("filters", JSON.stringify(currentFilter));
 
-    
-      navigate(getCurrentMenuItem.path);
+    navigate(getCurrentMenuItem.path);
   }
   return (
     <nav className="flex flex-col mb-3 lg:mb-0 lg:items-center gap-6 lg:flex-row ">
       {shoppingViewHeaderMenuItems.map((menuItem) => (
         <Label
-        onClick={() =>
-          handleNavigate(menuItem)
-        }
+          onClick={() => handleNavigate(menuItem)}
           key={menuItem.id}
           className="text-sm font-medium cursor-pointer"
         >
@@ -75,6 +72,7 @@ function HeaderRightContent() {
           <span className="sr-only">User Cart</span>
         </Button>
         <UserCartWrapper
+          setOpenCart={setOpenCart}
           cartItems={
             cartItems && cartItems?.items && cartItems?.items.length > 0
               ? cartItems?.items
