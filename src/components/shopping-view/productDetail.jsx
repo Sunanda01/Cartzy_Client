@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
@@ -9,14 +9,22 @@ import { useDispatch, useSelector } from "react-redux";
 import { addToCart, fetchCart } from "@/store/cart-slice";
 import { toast } from "sonner";
 import { setProductDetails } from "@/store/product-slice";
+import { Label } from "../ui/label";
+import StarRatingComponent from "../common/star-rating";
+import { addReview, getReviews } from "@/store/review-slice";
 
 function ProductDetailsDialog({ open, setOpen, productDetails }) {
+  const [reviewMsg, setReviewMsg] = useState("");
+  const [rating, setRating] = useState(0);
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const { cartItems } = useSelector((state) => state.shopCart);
-  function handleAddToCart(getCurrentProductId,getTotalStock) {
+  function handleRatingChange(getRating) {
+    setRating(getRating);
+  }
+  function handleAddToCart(getCurrentProductId, getTotalStock) {
     // console.log(getCurrentProductId, "idindetail");
-    console.log(cartItems,'cart itemssssssssssss');
+    console.log(cartItems, "cart itemssssssssssss");
     let getCartItem = cartItems.items || [];
     if (getCartItem.length) {
       const indexOfCurrentItem = getCartItem.findIndex(
@@ -49,6 +57,27 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
   function handleDialogClose() {
     setOpen(false);
     dispatch(setProductDetails());
+  }
+  
+  function handleAddReview() {
+    dispatch(
+      addReview({
+        productId: productDetails?._id,
+        userId: user?.id,
+        userName: user?.userName,
+        reviewMessage: reviewMsg,
+        reviewValue: rating,
+      })
+    ).then((data) => {
+      if (data.payload.success) {
+        setRating(0);
+        setReviewMsg("");
+        dispatch(getReviews(productDetails?._id));
+        toast({
+          title: "Review added successfully!",
+        });
+      }
+    });
   }
   return (
     <Dialog open={open} onOpenChange={handleDialogClose}>
@@ -101,7 +130,12 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
             ) : (
               <Button
                 className="w-full"
-                onClick={() => handleAddToCart(productDetails?._id,productDetails?.totalStock)}
+                onClick={() =>
+                  handleAddToCart(
+                    productDetails?._id,
+                    productDetails?.totalStock
+                  )
+                }
               >
                 Add to Cart
               </Button>
@@ -132,9 +166,23 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
                 </div>
               </div>
             </div>
-            <div className="mt-6 flex gap-2">
-              <Input placeholder="Write a review....." />
-              <Button>Submit</Button>
+            <div className="mt-10 flex-col flex gap-2">
+              <Label>Write a Review.....</Label>
+              <div className="flex gap-0.5">
+                <StarRatingComponent
+                  rating={rating}
+                  handleRatingChange={handleRatingChange}
+                />
+              </div>
+              <Input
+                name="reviewMessage"
+                value={reviewMsg}
+                onChange={(event) => setReviewMsg(event.target.value)}
+                placeholder="Write a review....."
+              />
+              <Button
+              onClick={handleAddReview}
+              disabled={reviewMsg.trim() === ""}>Submit</Button>
             </div>
           </div>
         </div>

@@ -6,7 +6,8 @@ import shopCartSlice from './cart-slice/index'
 import addressSlice from './address-slice/index'
 import shoppingOrderSlice from './order-slice/index'
 import adminOrderSlice from './admin/orders-slice/index'
-import searchSlice from './search-slice.js/index'
+import searchSlice from './search-slice/index'
+import reviewSlice from './review-slice/index'
 const store=configureStore({
     reducer:{
         auth:authReducer,
@@ -16,7 +17,8 @@ const store=configureStore({
         shopAddress:addressSlice,
         shopOrder:shoppingOrderSlice,
         adminOrder:adminOrderSlice,
-        shopSearch:searchSlice
+        shopSearch:searchSlice,
+        shopReview:reviewSlice
     },
 })
 

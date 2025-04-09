@@ -6,7 +6,7 @@ import { fetchProductDetails } from "@/store/product-slice/index";
 import {
   getSearchResults,
   resetSearchResults,
-} from "@/store/search-slice.js/index";
+} from "@/store/search-slice/index";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
