@@ -33,11 +33,11 @@ function ShoppingCheckout() {
 
   function handleInitiatePaypalPayment() {
     if (cartItems?.items?.length === 0) {
-      toast("Your cart is empty. Please add items to proceed");
+      toast.info("Your cart is empty. Please add items to proceed");
       return;
     }
     if (currentSelectedAddress === null) {
-      toast("Please select one address to proceed.");
+      toast.info("Please select one address to proceed.");
       return;
     }
 

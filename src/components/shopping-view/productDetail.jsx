@@ -25,7 +25,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
       if (indexOfCurrentItem > -1) {
         const getQuantity = getCartItem[indexOfCurrentItem].quantity;
         if (getQuantity + 1 > getTotalStock) {
-          toast.error(`Only ${getTotalStock} items can be added`);
+          toast.info(`Only ${getTotalStock} items can be added`);
           return;
         }
       }
