@@ -21,17 +21,17 @@ function UserCartItemContent({ getCartItems }) {
       let getCartItem = cartItems?.items || [];
       if (getCartItem?.length) {
         const indexOfCurrentItem = getCartItem.findIndex(
-          (item) => item.productId === getCartItems?.productId
+          (item) => item?.productId === getCartItems?.productId
         );
         const getCurrentProductIndex = productsList.findIndex(
-          (product) => product._id === getCartItems?.productId
+          (product) => product?._id === getCartItems?.productId
         );
         const getTotalStock = productsList[getCurrentProductIndex].totalStock;
         console.log(getCurrentProductIndex, getTotalStock, "getTotalStock");
         if (indexOfCurrentItem > -1) {
           const getQuantity = getCartItem[indexOfCurrentItem].quantity;
           if (getQuantity + 1 > getTotalStock) {
-            toast.error(`Only ${getQuantity} items can be added`);
+            toast.error(`Only ${getTotalStock} items can be added`);
             return;
           }
         }
