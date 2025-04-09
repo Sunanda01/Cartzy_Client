@@ -13,8 +13,23 @@ import { setProductDetails } from "@/store/product-slice";
 function ProductDetailsDialog({ open, setOpen, productDetails }) {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
-  function handleAddToCart(getCurrentProductId) {
-    console.log(getCurrentProductId, "idindetail");
+  const { cartItems } = useSelector((state) => state.shopCart);
+  function handleAddToCart(getCurrentProductId,getTotalStock) {
+    // console.log(getCurrentProductId, "idindetail");
+    console.log(cartItems,'cart itemssssssssssss');
+    let getCartItem = cartItems.items || [];
+    if (getCartItem.length) {
+      const indexOfCurrentItem = getCartItem.findIndex(
+        (item) => item.productId === getCurrentProductId
+      );
+      if (indexOfCurrentItem > -1) {
+        const getQuantity = getCartItem[indexOfCurrentItem].quantity;
+        if (getQuantity + 1 > getTotalStock) {
+          toast.error(`Only ${getQuantity} items can be added`);
+          return;
+        }
+      }
+    }
     dispatch(
       addToCart({
         userId: user?.id,
@@ -31,7 +46,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
       }
     });
   }
-  function handleDialogClose(){
+  function handleDialogClose() {
     setOpen(false);
     dispatch(setProductDetails());
   }
@@ -79,12 +94,18 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
             <span className="text-muted-foreground">(4.5)</span>
           </div>
           <div className="mt-5 mb-5">
-            <Button
-              className="w-full"
-              onClick={() => handleAddToCart(productDetails?._id)}
-            >
-              Add to Cart
-            </Button>
+            {productDetails?.totalStock === 0 ? (
+              <Button className="w-full opacity-60 cursor-not-allowed">
+                Out Of Stock
+              </Button>
+            ) : (
+              <Button
+                className="w-full"
+                onClick={() => handleAddToCart(productDetails?._id,productDetails?.totalStock)}
+              >
+                Add to Cart
+              </Button>
+            )}
           </div>
           <Separator />
           <div className="max-h-[300px] overflow-auto">

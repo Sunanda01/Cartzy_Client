@@ -26,7 +26,7 @@ function UserCartWrapper({ cartItems, setOpenCart }) {
       </SheetHeader>
       <div className="mt-8 space-y-4">
         {cartItems && cartItems.length > 0
-          ? cartItems.map((items) => <UserCartItemContent cartItems={items} />)
+          ? cartItems.map((items) => <UserCartItemContent getCartItems={items} />)
           : null}
       </div>
       <div className="mt-8 space-y-4">
