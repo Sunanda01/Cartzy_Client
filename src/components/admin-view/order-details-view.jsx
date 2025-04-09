@@ -1,45 +1,78 @@
-import { DialogContent } from "@radix-ui/react-dialog";
-import {useState} from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Badge } from "../ui/badge";
+import { DialogContent } from "../ui/dialog";
+import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
+import CommonForm from "../common/form";
+import { useState } from "react";
+import {
+  getAllOrder,
+  getOrderDetails,
+  updateOrderDetails,
+} from "@/store/admin/orders-slice";
+import { toast } from "sonner";
+const initialFormData = {
+  status: "",
+};
 
-const initialFormData={
-    status:''
-}
-
-function AdminOrderDetailsView() {
-    const [formData, setFormData] = useState(initialFormData);
-
-    function handleUpdateStatus(e){
-        e.preventDefault();
-    }
-
+function AdminOrderDetailsView({ adminOrderDetails }) {
+  const { user } = useSelector((state) => state.auth);
+  const [formData, setFormData] = useState(initialFormData);
+  const dispatch = useDispatch();
+  function handleUpdateStatus(e) {
+    e.preventDefault();
+    console.log(formData);
+    const { status } = formData;
+    dispatch(
+      updateOrderDetails({ id: adminOrderDetails?._id, orderStatus: status })
+    ).then((data) => {
+      if (data?.payload?.success) {
+        dispatch(getOrderDetails(adminOrderDetails?._id));
+        dispatch(getAllOrder());
+        setFormData(initialFormData);
+        toast.success(data?.payload?.msg);
+      }
+    });
+  }
   return (
     <DialogContent className="sm:max-w-[600px]">
       <div className="grid gap-6">
         <div className="grid gap-2">
           <div className="flex mt-6 items-center justify-between">
             <p className="font-medium">Order ID</p>
-            <Label>123456</Label>
+            <Label>{adminOrderDetails?._id}</Label>
           </div>
-          <div className="flex mt-6 items-center justify-between">
+          <div className="flex mt-2 items-center justify-between">
             <p className="font-medium">Order Date</p>
-            <Label>123456</Label>
+            <Label>{adminOrderDetails?.orderDate.split("T")[0]}</Label>
           </div>
-          <div className="flex mt-6 items-center justify-between">
+          <div className="flex mt-2 items-center justify-between">
             <p className="font-medium">Order Price</p>
-            <Label>123456</Label>
+            <Label>${adminOrderDetails?.totalAmount}</Label>
           </div>
-          <div className="flex mt-6 items-center justify-between">
+          <div className="flex mt-2 items-center justify-between">
             <p className="font-medium">Payment method</p>
-            <Label>123456</Label>
+            <Label>{adminOrderDetails?.paymentMethod}</Label>
           </div>
-          <div className="flex mt-6 items-center justify-between">
+          <div className="flex mt-2 items-center justify-between">
             <p className="font-medium">Payment Status</p>
-            <Label>123456</Label>
+            <Label>{adminOrderDetails?.paymentStatus}</Label>
           </div>
-          <div className="flex mt-6 items-center justify-between">
+          <div className="flex mt-2 items-center justify-between">
             <p className="font-medium">Order Status</p>
-            <Label>123456</Label>
+            <Label>
+              <Badge
+                className={`py-1 px-3 ${
+                  adminOrderDetails?.orderStatus === "confirmed"
+                    ? "bg-green-500"
+                    : adminOrderDetails?.orderStatus === "rejected"
+                    ? "bg-red-600"
+                    : "bg-black"
+                }`}
+              >
+                {adminOrderDetails?.orderStatus}
+              </Badge>
+            </Label>
           </div>
         </div>
         <Separator />
@@ -47,16 +80,16 @@ function AdminOrderDetailsView() {
           <div className="grid gap-2">
             <div className="font-medium">Order Details</div>
             <ul className="grid gap-3">
-              Order Details
-               {/* {orderDetails?.cartItems && orderDetails?.cartItems.length > 0
-                ? orderDetails?.cartItems.map((item) => (
+              {adminOrderDetails?.cartItems &&
+              adminOrderDetails?.cartItems.length > 0
+                ? adminOrderDetails?.cartItems.map((item) => (
                     <li className="flex items-center justify-between">
                       <span>Title: {item.title}</span>
                       <span>Quantity: {item.quantity}</span>
                       <span>Price: ${item.price}</span>
                     </li>
                   ))
-                : null}  */}
+                : null}
             </ul>
           </div>
         </div>
@@ -64,12 +97,12 @@ function AdminOrderDetailsView() {
           <div className="grid gap-2">
             <div className="font-medium">Shipping Info</div>
             <div className="grid gap-0.5 text-muted-foreground">
-              {/* <span>{user.userName}</span>
-              <span>{orderDetails?.addressInfo?.address}</span>
-              <span>{orderDetails?.addressInfo?.city}</span>
-              <span>{orderDetails?.addressInfo?.pincode}</span>
-              <span>{orderDetails?.addressInfo?.phone}</span>
-              <span>{orderDetails?.addressInfo?.notes}</span>  */}
+              <span>{user.userName}</span>
+              <span>{adminOrderDetails?.addressInfo?.address}</span>
+              <span>{adminOrderDetails?.addressInfo?.city}</span>
+              <span>{adminOrderDetails?.addressInfo?.pincode}</span>
+              <span>{adminOrderDetails?.addressInfo?.phone}</span>
+              <span>{adminOrderDetails?.addressInfo?.notes}</span>
             </div>
           </div>
         </div>
