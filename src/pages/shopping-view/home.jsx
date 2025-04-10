@@ -51,12 +51,27 @@ function ShoppingHome() {
   const { productsList, productDetails } = useSelector(
     (state) => state.shopProducts
   );
+  const { cartItems } = useSelector((state) => state.shopCart);
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
   const { featureImageList } = useSelector((state) => state.commonFeature);
 
-  function handleAddToCart(getCurrentProductId) {
-    console.log(getCurrentProductId, "id");
+  function handleAddToCart(getCurrentProductId, getTotalStock) {
+    // console.log(getCurrentProductId, "idindetail");
+    console.log(cartItems, "cart itemssssssssssss");
+    let getCartItem = cartItems?.items || [];
+    if (getCartItem.length) {
+      const indexOfCurrentItem = getCartItem.findIndex(
+        (item) => item.productId === getCurrentProductId
+      );
+      if (indexOfCurrentItem > -1) {
+        const getQuantity = getCartItem[indexOfCurrentItem].quantity;
+        if (getQuantity + 1 > getTotalStock) {
+          toast.info(`Only ${getTotalStock} items can be added`);
+          return;
+        }
+      }
+    }
     dispatch(
       addToCart({
         userId: user?.id,

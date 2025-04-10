@@ -27,7 +27,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
   function handleAddToCart(getCurrentProductId, getTotalStock) {
     // console.log(getCurrentProductId, "idindetail");
     console.log(cartItems, "cart itemssssssssssss");
-    let getCartItem = cartItems.items || [];
+    let getCartItem = cartItems?.items || [];
     if (getCartItem.length) {
       const indexOfCurrentItem = getCartItem.findIndex(
         (item) => item.productId === getCurrentProductId

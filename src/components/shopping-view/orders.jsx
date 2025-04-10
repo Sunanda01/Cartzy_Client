@@ -27,15 +27,12 @@ function ShoppingOrders() {
 
   function handleFetchOrderDetails(getId) {
     dispatch(getOrderDetails(getId));
+    setOpenDetailsDialog(true);
   }
 
   useEffect(() => {
     dispatch(getAllOrdersByUserId(user?.id));
   }, [dispatch]);
-
-  useEffect(() => {
-    if (orderDetails !== null) setOpenDetailsDialog(true);
-  }, [orderDetails]);
 
   console.log(orderDetails,'order List');
 
