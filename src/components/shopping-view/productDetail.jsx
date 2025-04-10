@@ -82,9 +82,9 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
       }
     });
   }
-  useEffect(() => {
-    if (productDetails !== null) dispatch(getReviews(productDetails?._id));
-  }, [productDetails]);
+    useEffect(() => {
+      if (productDetails !== null) dispatch(getReviews(productDetails?._id));
+    }, [productDetails]);
 
   const averageReview =
     reviews && reviews.length > 0

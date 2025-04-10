@@ -67,20 +67,36 @@ function HeaderRightContent() {
   const [openCart, setOpenCart] = useState(false);
   const { cartItems } = useSelector((state) => state.shopCart);
   const { user } = useSelector((state) => state.auth);
-  const naviagte = useNavigate();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   function handleLogout() {
     dispatch(logoutUser()).then((data) => {
-      toast.success(data?.payload.msg);
+      if (data?.payload?.success) {
+        toast.success(data?.payload.msg);
+      } else {
+        toast.error(data?.payload.msg);
+      }
     });
   }
-  useEffect(() => dispatch(fetchCart(user?.id)), [dispatch]);
-  console.log(cartItems?.items, "jdhfjkdshfjhdsjf");
+  useEffect(() => {
+    if (user?.id) {
+      dispatch(fetchCart(user?.id));
+    }
+  }, [dispatch]);
+  // console.log(cartItems?.items, "jdhfjkdshfjhdsjf");
   return (
     <div className="flex flex-col lg:flex-row gap-4 lg:items-center">
       <Sheet open={openCart} onOpenChange={() => setOpenCart(false)}>
-        <Button varient="outline" size="icon" onClick={() => setOpenCart(true)}>
-          <ShoppingCart className="h-6 w-6" />
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => setOpenCart(true)}
+          className="relative "
+        >
+          <ShoppingCart className="h-6 w-6 " />
+          <span className="absolute top-0 font-extrabold   font-sm right-0">
+            {cartItems?.items?.length || 0}
+          </span>
           <span className="sr-only">User Cart</span>
         </Button>
         <UserCartWrapper
@@ -103,7 +119,7 @@ function HeaderRightContent() {
         <DropdownMenuContent side="right">
           <DropdownMenuLabel>Logged In As {user?.userName}</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => naviagte("/shop/account")}>
+          <DropdownMenuItem onClick={() => navigate("/shop/account")}>
             <UserCog className="h-4 w-4 mr-2" />
             Account
           </DropdownMenuItem>
