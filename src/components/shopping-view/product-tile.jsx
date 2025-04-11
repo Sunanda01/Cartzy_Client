@@ -8,6 +8,7 @@ function ShoppingProductTile({
   handleGetProductDetails,
   handleAddToCart,
 }) {
+  console.log(product)
   return (
     <Card className="w-full mx-auto max-w-sm">
       <div

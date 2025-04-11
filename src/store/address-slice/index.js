@@ -5,15 +5,41 @@ const initialState = {
   isLoading: false,
   addressList: [],
 };
+import { addressSchema } from "@/validators"; // assuming it's exported there
+import { toast } from "sonner";
+
 export const addNewAddress = createAsyncThunk(
   "/addresses/addNewAddress",
-  async (formData) => {
-    const response = await axios.post(
-      `${import.meta.env.VITE_BACKEND_URL}/api/shop/address/add`,
-      formData
-    );
+  async (formData, { rejectWithValue }) => {
+    const result = addressSchema.safeParse(formData);
+    if (!result.success) {
+      const formattedErrors = {};
+      result.error.errors.forEach((err) => {
+        const field = err.path[0];
+        if (!formattedErrors[field]) {
+          formattedErrors[field] = [];
+        }
+        formattedErrors[field].push(err.message);
+      });
 
-    return response.data;
+      return rejectWithValue({
+        success: false,
+        msg: "Validation failed",
+        errors: formattedErrors,
+      });
+    }
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/shop/address/add`,
+        result.data
+      );
+      return response.data;
+    } catch (err) {
+      return rejectWithValue({
+        success: false,
+        msg: err?.response?.data?.msg || "Failed to add address",
+      });
+    }
   }
 );
 
@@ -30,13 +56,37 @@ export const fetchAllAddresses = createAsyncThunk(
 
 export const editAddress = createAsyncThunk(
   "/addresses/editAddress",
-  async ({ userId, addressId, formData }) => {
-    const response = await axios.put(
-      `${import.meta.env.VITE_BACKEND_URL}/api/shop/address/update/${userId}/${addressId}`,
-      formData
-    );
-
-    return response.data;
+  async ({ userId, addressId, formData }, { rejectWithValue }) => {
+    const result = addressSchema.safeParse(formData);
+    if (!result.success) {
+      const formattedErrors = {};
+      result.error.errors.forEach((err) => {
+        const field = err.path[0];
+        if (!formattedErrors[field]) {
+          formattedErrors[field] = [];
+        }
+        formattedErrors[field].push(err.message);
+      });
+      return rejectWithValue({
+        success: false,
+        msg: "Validation failed",
+        errors: formattedErrors,
+      });
+    }
+    try {
+      const response = await axios.put(
+        `${
+          import.meta.env.VITE_BACKEND_URL
+        }/api/shop/address/update/${userId}/${addressId}`,
+        result.data // validated + possibly coerced input
+      );
+      return response.data;
+    } catch (err) {
+      return rejectWithValue({
+        success: false,
+        msg: err?.response?.data?.msg || "Failed to update address",
+      });
+    }
   }
 );
 
@@ -44,7 +94,9 @@ export const deleteAddress = createAsyncThunk(
   "/addresses/deleteAddress",
   async ({ userId, addressId }) => {
     const response = await axios.delete(
-      `${import.meta.env.VITE_BACKEND_URL}/api/shop/address/delete/${userId}/${addressId}`
+      `${
+        import.meta.env.VITE_BACKEND_URL
+      }/api/shop/address/delete/${userId}/${addressId}`
     );
 
     return response.data;
@@ -63,8 +115,20 @@ const addressSlice = createSlice({
       .addCase(addNewAddress.fulfilled, (state) => {
         state.isLoading = false;
       })
-      .addCase(addNewAddress.rejected, (state) => {
-        state.isLoading = false;
+      .addCase(addNewAddress.rejected, (state, action) => {
+        const payload = action.payload;
+
+        if (payload?.errors) {
+          Object.entries(payload.errors).forEach(([field, messages]) => {
+            if (Array.isArray(messages)) {
+              messages.forEach((msg) => {
+                toast.error(`${field}: ${msg}`);
+              });
+            }
+          });
+        } else {
+          toast.error(payload?.msg || "Something went wrong");
+        }
       })
       .addCase(fetchAllAddresses.pending, (state) => {
         state.isLoading = true;
@@ -76,6 +140,20 @@ const addressSlice = createSlice({
       .addCase(fetchAllAddresses.rejected, (state) => {
         state.isLoading = false;
         state.addressList = [];
+      })
+      .addCase(editAddress.rejected, (state, action) => {
+        const payload = action.payload;
+        if (payload?.errors) {
+          Object.entries(payload.errors).forEach(([field, messages]) => {
+            if (Array.isArray(messages)) {
+              messages.forEach((msg) => {
+                toast.error(`${field}: ${msg}`);
+              });
+            }
+          });
+        } else {
+          toast.error(payload?.msg || "Something went wrong");
+        }
       });
   },
 });
