@@ -1,12 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import {productSchema,updateProductSchema} from '@/validators';
+import { productSchema, updateProductSchema } from "@/validators";
 import { toast } from "sonner";
 const initialState = {
   isLoading: false,
   productList: [],
 };
-
 
 export const addNewProduct = createAsyncThunk(
   "/products/addnewproduct",
@@ -41,17 +40,15 @@ export const addNewProduct = createAsyncThunk(
   }
 );
 
-
 export const fetchAllProduct = createAsyncThunk(
   "/products/fetchallproduct",
   async () => {
     const response = await axios.get(
-      `${import.meta.env.VITE_BACKEND_URL}/api/admin/products/get`,
+      `${import.meta.env.VITE_BACKEND_URL}/api/admin/products/get`
     );
     return response?.data;
   }
 );
-
 
 export const editProduct = createAsyncThunk(
   "/products/editproduct",
@@ -81,7 +78,6 @@ export const editProduct = createAsyncThunk(
           headers: {
             "Content-Type": "application/json",
           },
-         
         }
       );
       return response?.data;
@@ -94,13 +90,11 @@ export const editProduct = createAsyncThunk(
   }
 );
 
-
 export const deleteProduct = createAsyncThunk(
   "/products/deleteproduct",
   async (id) => {
     const response = await axios.delete(
-      `${import.meta.env.VITE_BACKEND_URL}/api/admin/products/delete/${id}`,
-      
+      `${import.meta.env.VITE_BACKEND_URL}/api/admin/products/delete/${id}`
     );
     return response?.data;
   }
@@ -148,7 +142,7 @@ const AdminProductSlice = createSlice({
         } else {
           toast.error("Something went wrong");
         }
-      })      
+      })
       .addCase(fetchAllProduct.pending, (state) => {
         state.isLoading = true;
       })

@@ -33,9 +33,9 @@ const shoppingProductSlice = createSlice({
   name: "shoppingProduct",
   initialState,
   reducers: {
-    setProductDetails:(state)=>{
-      state.productDetails=null;
-    }
+    setProductDetails: (state) => {
+      state.productDetails = null;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -53,14 +53,14 @@ const shoppingProductSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(fetchProductDetails.fulfilled, (state, action) => {
-        console.log(action?.payload.data,'details');
+        console.log(action?.payload.data, "details");
         (state.isLoading = false),
-        (state.productDetails = action?.payload.data);
+          (state.productDetails = action?.payload.data);
       })
       .addCase(fetchProductDetails.rejected, (state) => {
         (state.isLoading = false), (state.productDetails = null);
       });
   },
 });
-export const {setProductDetails}=shoppingProductSlice.actions;
+export const { setProductDetails } = shoppingProductSlice.actions;
 export default shoppingProductSlice.reducer;

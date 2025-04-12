@@ -23,17 +23,17 @@ import PaypalCancelPage from "./components/shopping-view/paypal-cancel";
 import PaymentSuccess from "./components/shopping-view/payment-success";
 import SearchProducts from "./pages/shopping-view/search";
 
-
 function App() {
-  
-  const { user, isAuthenticated, isLoading } = useSelector((state) => state.auth);
-  const dispatch=useDispatch();
-  useEffect(()=>{
+  const { user, isAuthenticated, isLoading } = useSelector(
+    (state) => state.auth
+  );
+  const dispatch = useDispatch();
+  useEffect(() => {
     dispatch(checkAuth());
-  },[dispatch]);
+  }, [dispatch]);
 
-  if(isLoading) return <Skeleton className="w-[800px] h-[600px] bg-black" />
- 
+  if (isLoading) return <Skeleton className="w-[800px] h-[600px] bg-black" />;
+
   return (
     <div className="flex flex-col overflow-hidden bg-white">
       <Routes>
@@ -79,10 +79,10 @@ function App() {
           <Route path="checkout" element={<ShoppingCheckout />} />
           <Route path="home" element={<ShoppingHome />} />
           <Route path="listing" element={<ShoppingListing />} />
-          <Route path="paypal-return" element={<PaypalReturnPage/>}/>
-          <Route path="paypal-cancel" element={<PaypalCancelPage/>}/>
-          <Route path="payment-success" element={<PaymentSuccess/>}/>
-          <Route path="search" element={<SearchProducts/>}/>
+          <Route path="paypal-return" element={<PaypalReturnPage />} />
+          <Route path="paypal-cancel" element={<PaypalCancelPage />} />
+          <Route path="payment-success" element={<PaymentSuccess />} />
+          <Route path="search" element={<SearchProducts />} />
         </Route>
 
         <Route path="/unauth-page" element={<UnauthPage />} />

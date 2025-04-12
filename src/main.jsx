@@ -9,10 +9,9 @@ import axios from "axios";
 axios.defaults.withCredentials = true;
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
-  
     <Provider store={store}>
       <App />
-      <Toaster/>
+      <Toaster />
     </Provider>
   </BrowserRouter>
 );

@@ -5,9 +5,9 @@ const initialState = {
   approvalURL: null,
   isLoading: false,
   orderId: null,
-  paymentId:null,
-  orderDetails:null,
-  orderList:[]
+  paymentId: null,
+  orderDetails: null,
+  orderList: [],
 };
 
 export const createNewOrder = createAsyncThunk(
@@ -57,38 +57,36 @@ export const getOrderDetails = createAsyncThunk(
   }
 );
 
-
 const shoppingOrderSlice = createSlice({
   name: "shoppingOrderSlice",
   initialState,
-  reducers: {resetOrderDetails:(state)=>
-    state.orderDetails=null
-  },
+  reducers: { resetOrderDetails: (state) => (state.orderDetails = null) },
   extraReducers: (builder) => {
     builder
       .addCase(createNewOrder.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(createNewOrder.fulfilled, (state, action) => {
-        console.log(action?.payload,'slice');
+        console.log(action?.payload, "slice");
         (state.approvalURL = action?.payload.approvalURL),
           (state.isLoading = false),
           (state.orderId = action?.payload?.orderId),
-          (state.paymentId=action?.payload?.paymentId),
+          (state.paymentId = action?.payload?.paymentId),
           sessionStorage.setItem(
             "currentOrderId",
             JSON.stringify(action?.payload?.orderId)
           );
-          sessionStorage.setItem(
-            "currentPaymentId",
-            JSON.stringify(action?.payload?.paymentId)
-          );
+        sessionStorage.setItem(
+          "currentPaymentId",
+          JSON.stringify(action?.payload?.paymentId)
+        );
       })
       .addCase(createNewOrder.rejected, (state) => {
         (state.approvalURL = null),
           (state.isLoading = false),
           (state.orderId = null);
-      }).addCase(getAllOrdersByUserId.pending, (state) => {
+      })
+      .addCase(getAllOrdersByUserId.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(getAllOrdersByUserId.fulfilled, (state, action) => {
@@ -112,5 +110,5 @@ const shoppingOrderSlice = createSlice({
       });
   },
 });
-export const {resetOrderDetails}=shoppingOrderSlice.actions;
+export const { resetOrderDetails } = shoppingOrderSlice.actions;
 export default shoppingOrderSlice.reducer;
