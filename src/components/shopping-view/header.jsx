@@ -139,7 +139,7 @@ function ShoppingHeader() {
     <header className="sticky bg-background top-0 z-40 w-full border-b">
       <div className="flex h-16 items-center px-4 md:px-6 justify-between">
         <Link to="/shop/home" className="flex gap-2 items-center">
-          <HousePlug className="w-6 h-6" />
+        <img src="/cartzy.svg" alt="Cartzy Logo" className="w-6 h-6" />
           <span className="font-bold">Cartzy </span>
         </Link>
 

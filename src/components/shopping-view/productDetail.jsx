@@ -3,7 +3,6 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import { Avatar, AvatarFallback } from "../ui/avatar";
-import { StarIcon } from "lucide-react";
 import { Input } from "../ui/input";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, fetchCart } from "@/store/cart-slice";
@@ -71,14 +70,16 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
         reviewValue: rating,
       })
     ).then((data) => {
+      console.log(data)
       if (data?.payload?.success) {
         setRating(0);
         setReviewMsg("");
         dispatch(getReviews(productDetails?._id));
-        toast.success("Review added successfully!");
+        toast.success(data?.payload?.msg);
       }
       else{
-        toast.info("You have already reviwed the product")
+        console.log(data)
+        toast.info(data?.payload?.msg || "An unexpected error occurred.")
       }
     });
   }

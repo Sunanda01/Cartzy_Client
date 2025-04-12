@@ -5,7 +5,7 @@ const initialState = {
   isLoading: false,
   addressList: [],
 };
-import { addressSchema } from "@/validators"; // assuming it's exported there
+import { addressSchema } from "@/validators"; 
 import { toast } from "sonner";
 
 export const addNewAddress = createAsyncThunk(

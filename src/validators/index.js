@@ -24,26 +24,26 @@ export const logInSchema = z.object({
 });
 
 export const addressSchema = z.object({
+  userId: z.string().optional(),
   address: z
     .string()
-    .min(5, { message: "Address must be at least 5 characters" }),
+    .min(5, { message: "Address must be at least 5 characters" })
+    .max(255, { message: "Address must be less than 255 characters" }),
 
   city: z
     .string()
-    .min(2, { message: "City name must be at least 2 characters" }),
+    .min(2, { message: "City must be at least 2 characters" })
+    .max(100, { message: "City must be less than 100 characters" }),
 
-  phone: z.string().regex(/^[0-9]{10}$/, {
-    message: "Phone number must be exactly 10 digits",
+  phone: z.string().regex(/^\d{7,15}$/, {
+    message: "Phone number must be between 7 to 15 digits",
   }),
 
-  pincode: z.string().regex(/^\d{5,6}$/, {
-    message: "Pincode must be 5 or 6 digits",
+  pincode: z.string().regex(/^\d{4,10}$/, {
+    message: "Pincode must be between 4 to 10 digits",
   }),
 
-  notes: z
-    .string()
-    .max(500, { message: "Notes must be under 200 characters" })
-    .optional(),
+  notes: z.string().max(500, { message: "Notes must be under 500 characters" }),
 });
 
 export const productSchema = z.object({
