@@ -16,9 +16,7 @@ function AuthLogin() {
   function onSubmit(e) {
     e.preventDefault();
     dispatch(loginUser(formdata)).then((data) => {
-      console.log(data?.payload)
       if (data?.payload?.success) {
-        console.log(data);
         toast.success(data?.payload?.msg);
       } else {
         toast.error(data?.payload?.msg);

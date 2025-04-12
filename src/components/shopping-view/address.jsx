@@ -20,7 +20,7 @@ const initialAddressFormData = {
   notes: "",
 };
 
-function Address({selectedId,setCurrentSelectedAddress}) {
+function Address({ selectedId, setCurrentSelectedAddress }) {
   const [formData, setFormData] = useState(initialAddressFormData);
   const [currentEditedId, setCurrentEditedId] = useState(null);
   const dispatch = useDispatch();
@@ -31,38 +31,37 @@ function Address({selectedId,setCurrentSelectedAddress}) {
     e.preventDefault();
     if (addressList.length >= 3 && currentEditedId === null) {
       setFormData(initialAddressFormData);
-      toast.error(
-        "You can add max 3 addresses"
-      );
+      toast.error("You can add max 3 addresses");
 
       return;
     }
 
     currentEditedId !== null
-    ? dispatch(
-        editAddress({
-          userId: user?.id,
-          addressId: currentEditedId,
-          formData,
+      ? dispatch(
+          editAddress({
+            userId: user?.id,
+            addressId: currentEditedId,
+            formData,
+          })
+        ).then((data) => {
+          if (data?.payload?.success) {
+            dispatch(fetchAllAddresses(user?.id));
+            setCurrentEditedId(null);
+            setFormData(initialAddressFormData);
+            toast.success(data?.payload?.msg);
+          }
         })
-      ).then((data) => {
-        if (data?.payload?.success) {
-          dispatch(fetchAllAddresses(user?.id));
-          setCurrentEditedId(null);
-          setFormData(initialAddressFormData);
-          toast.success(data?.payload?.msg);
-        }
-      })
-    :
-    dispatch(addNewAddress({ ...formData, userId: user?.id })).then((data) => {
-      if (data?.payload?.success) {
-        toast.success(data?.payload?.msg);
-        dispatch(fetchAllAddresses(user?.id));
-        setFormData(initialAddressFormData);
-      } else {
-        toast.error(data?.payload?.msg);
-      }
-    });
+      : dispatch(addNewAddress({ ...formData, userId: user?.id })).then(
+          (data) => {
+            if (data?.payload?.success) {
+              toast.success(data?.payload?.msg);
+              dispatch(fetchAllAddresses(user?.id));
+              setFormData(initialAddressFormData);
+            } else {
+              toast.error(data?.payload?.msg);
+            }
+          }
+        );
   }
 
   function isFormValid() {
@@ -89,7 +88,6 @@ function Address({selectedId,setCurrentSelectedAddress}) {
     });
   }
   function handleEditAddress(getCurrentAddress) {
-    console.log(getCurrentAddress, "getCurrentAddress");
     setCurrentEditedId(getCurrentAddress?._id);
     setFormData({
       ...formData,
@@ -100,14 +98,13 @@ function Address({selectedId,setCurrentSelectedAddress}) {
       notes: getCurrentAddress?.notes,
     });
   }
-
-  console.log(addressList, "shopAddress");
   return (
     <Card>
       <div className="mb-5 p-3 grid grid-cols-1 sm:grid-cols-2  gap-2">
         {addressList && addressList.length > 0
           ? addressList.map((singleAddressItem) => (
               <AddressCard
+                key={singleAddressItem._id}
                 selectedId={selectedId}
                 handleDeleteAddress={handleDeleteAddress}
                 addressInfo={singleAddressItem}

@@ -110,7 +110,6 @@ const AdminProductSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(addNewProduct.fulfilled, (state, action) => {
-        console.log(action.payload);
         state.isLoading = false;
         state.productList = action.payload.data;
       })
@@ -130,7 +129,6 @@ const AdminProductSlice = createSlice({
         state.isLoading = false;
         state.productList = [];
         const payload = action.payload;
-        console.log("Validation Errors:", payload);
         if (payload?.errors) {
           Object.entries(payload.errors).forEach(([field, messages]) => {
             messages.forEach((msg) => {

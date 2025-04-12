@@ -13,12 +13,10 @@ const initialState = {
 export const createNewOrder = createAsyncThunk(
   "/order/createNewOrder",
   async (orderData) => {
-    console.log(orderData, "orderData2");
     const response = await axios.post(
       `${import.meta.env.VITE_BACKEND_URL}/api/shop/orders/create`,
       orderData
     );
-    console.log(response, "response");
     return response?.data;
   }
 );
@@ -30,7 +28,6 @@ export const capturePayment = createAsyncThunk(
       `${import.meta.env.VITE_BACKEND_URL}/api/shop/orders/capture`,
       { paymentId, payerId, orderId }
     );
-    console.log(response, "response");
     return response?.data;
   }
 );
@@ -67,7 +64,6 @@ const shoppingOrderSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(createNewOrder.fulfilled, (state, action) => {
-        console.log(action?.payload, "slice");
         (state.approvalURL = action?.payload.approvalURL),
           (state.isLoading = false),
           (state.orderId = action?.payload?.orderId),

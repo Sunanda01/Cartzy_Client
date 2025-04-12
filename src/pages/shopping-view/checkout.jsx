@@ -16,8 +16,6 @@ function ShoppingCheckout() {
   const [isPaymentStart, setIsPaymentStart] = useState(false);
   const dispatch = useDispatch();
 
-  console.log(cartItems?.items.length, "cartItems");
-
   const totalCartAmount =
     cartItems && cartItems.items && cartItems.items.length > 0
       ? cartItems.items.reduce(
@@ -71,9 +69,7 @@ function ShoppingCheckout() {
       paymentId: "",
       payerId: "",
     };
-    console.log(orderData, "orderData");
     dispatch(createNewOrder(orderData)).then((data) => {
-      console.log(data, "sangam");
       if (data?.payload?.success) {
         setIsPaymentStart(true);
       } else {
@@ -99,7 +95,7 @@ function ShoppingCheckout() {
         <div className="flex flex-col gap-2">
           {cartItems && cartItems.items && cartItems.items.length > 0
             ? cartItems.items.map((item) => (
-                <UserCartItemsContent getCartItems={item} />
+                <UserCartItemsContent getCartItems={item} key={item._id} />
               ))
             : null}
           <div className="mt-8 space-y-4">
@@ -109,7 +105,11 @@ function ShoppingCheckout() {
             </div>
           </div>
           <div className="mt-4 w-full">
-            <Button onClick={handleInitiatePaypalPayment} className="w-full" disabled={isPaymentStart}>
+            <Button
+              onClick={handleInitiatePaypalPayment}
+              className={`${isPaymentStart ? "cursor-wait" : ""} w-full`}
+              disabled={isPaymentStart || (cartItems && cartItems.length===0)}
+            >
               {isPaymentStart
                 ? "Processing Paypal Payment..."
                 : "Checkout with Paypal"}

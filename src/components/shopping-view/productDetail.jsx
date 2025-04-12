@@ -24,8 +24,6 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
     setRating(getRating);
   }
   function handleAddToCart(getCurrentProductId, getTotalStock) {
-    // console.log(getCurrentProductId, "idindetail");
-    console.log(cartItems, "cart itemssssssssssss");
     let getCartItem = cartItems?.items || [];
     if (getCartItem.length) {
       const indexOfCurrentItem = getCartItem.findIndex(
@@ -46,7 +44,6 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
         quantity: 1,
       })
     ).then((data) => {
-      console.log(data);
       if (data?.payload.success) {
         toast.success(data?.payload.msg);
         dispatch(fetchCart(user?.id));
@@ -70,7 +67,6 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
         reviewValue: rating,
       })
     ).then((data) => {
-      console.log(data)
       if (data?.payload?.success) {
         setRating(0);
         setReviewMsg("");
@@ -78,7 +74,6 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
         toast.success(data?.payload?.msg);
       }
       else{
-        console.log(data)
         toast.info(data?.payload?.msg || "An unexpected error occurred.")
       }
     });
@@ -92,8 +87,6 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
       ? reviews.reduce((sum, reviewItem) => sum + reviewItem.reviewValue, 0) /
         reviews.length
       : 0;
-
-  console.log(reviews, "reviews");
   return (
     <Dialog open={open} onOpenChange={handleDialogClose}>
       <DialogContent className="grid grid-cols-2 gap-8 sm:p-12  max-w-[90vw] sm:max-w-[80vw] lg:max-w-[70vw]">
@@ -157,7 +150,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
             <h2 className="font-bold text-xl mb-4">Reviews</h2>
             <div className="grid gap-6">
             {reviews && reviews.length>0?(reviews.map((review)=>(
-              <div className="flex gap-4">
+              <div className="flex gap-4" key={review?._id}>
               
               <Avatar className="w-10 h-10 border">
                 <AvatarFallback> {review?.userName[0].toUpperCase()}</AvatarFallback>

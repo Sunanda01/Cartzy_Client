@@ -57,8 +57,6 @@ function ShoppingHome() {
   const { featureImageList } = useSelector((state) => state.commonFeature);
 
   function handleAddToCart(getCurrentProductId, getTotalStock) {
-    // console.log(getCurrentProductId, "idindetail");
-    console.log(cartItems, "cart itemssssssssssss");
     let getCartItem = cartItems?.items || [];
     if (getCartItem.length) {
       const indexOfCurrentItem = getCartItem.findIndex(
@@ -79,7 +77,6 @@ function ShoppingHome() {
         quantity: 1,
       })
     ).then((data) => {
-      console.log(data);
       if (data?.payload.success) {
         toast.success(data?.payload.msg);
         dispatch(fetchCart(user?.id));
@@ -90,7 +87,6 @@ function ShoppingHome() {
   }
 
   function handleGetProductDetails(getCurrentProductId) {
-    console.log(getCurrentProductId);
     dispatch(fetchProductDetails(getCurrentProductId));
   }
 
@@ -123,8 +119,6 @@ function ShoppingHome() {
   useEffect(() => {
     if (productDetails !== null) setOpen(true);
   }, [productDetails]);
-
-  console.log(featureImageList, "productsList");
 
   useEffect(() => {
     dispatch(getFeatureImages());
@@ -179,6 +173,7 @@ function ShoppingHome() {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             {categoriesWithIcon.map((categoryItem) => (
               <Card
+                key={categoryItem.label}
                 onClick={() =>
                   handleNavigateToListingPage(categoryItem, "category")
                 }
@@ -200,6 +195,7 @@ function ShoppingHome() {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {brandsWithIcon.map((brandItem) => (
               <Card
+                key={brandItem.label}
                 onClick={() => handleNavigateToListingPage(brandItem, "brand")}
                 className="cursor-pointer hover:shadow-lg transition-shadow"
               >
@@ -222,6 +218,7 @@ function ShoppingHome() {
             {productsList && productsList.length > 0
               ? productsList.map((productItem) => (
                   <ShoppingProductTile
+                    key={productItem._id}
                     handleGetProductDetails={handleGetProductDetails}
                     product={productItem}
                     handleAddToCart={handleAddToCart}

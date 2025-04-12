@@ -27,7 +27,6 @@ function UserCartItemContent({ getCartItems }) {
           (product) => product?._id === getCartItems?.productId
         );
         const getTotalStock = productsList[getCurrentProductIndex].totalStock;
-        console.log(getCurrentProductIndex, getTotalStock, "getTotalStock");
         if (indexOfCurrentItem > -1) {
           const getQuantity = getCartItem[indexOfCurrentItem].quantity;
           if (getQuantity + 1 > getTotalStock) {

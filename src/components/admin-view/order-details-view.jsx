@@ -21,7 +21,6 @@ function AdminOrderDetailsView({ adminOrderDetails }) {
   const dispatch = useDispatch();
   function handleUpdateStatus(e) {
     e.preventDefault();
-    console.log(formData);
     const { status } = formData;
     dispatch(
       updateOrderDetails({ id: adminOrderDetails?._id, orderStatus: status })
@@ -83,7 +82,10 @@ function AdminOrderDetailsView({ adminOrderDetails }) {
               {adminOrderDetails?.cartItems &&
               adminOrderDetails?.cartItems.length > 0
                 ? adminOrderDetails?.cartItems.map((item) => (
-                    <li className="flex items-center justify-between">
+                    <li
+                      key={item._id || item.productId}
+                      className="flex items-center justify-between"
+                    >
                       <span>Title: {item.title}</span>
                       <span>Quantity: {item.quantity}</span>
                       <span>Price: ${item.price}</span>

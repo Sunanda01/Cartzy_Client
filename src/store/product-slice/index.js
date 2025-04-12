@@ -43,7 +43,6 @@ const shoppingProductSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(fetchAllFeaturedProducts.fulfilled, (state, action) => {
-        console.log(action?.payload.data);
         (state.isLoading = false), (state.productsList = action?.payload.data);
       })
       .addCase(fetchAllFeaturedProducts.rejected, (state) => {
@@ -53,7 +52,6 @@ const shoppingProductSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(fetchProductDetails.fulfilled, (state, action) => {
-        console.log(action?.payload.data, "details");
         (state.isLoading = false),
           (state.productDetails = action?.payload.data);
       })

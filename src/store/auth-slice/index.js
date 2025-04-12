@@ -14,7 +14,6 @@ export const registerUser = createAsyncThunk(
     const result = registerSchema.safeParse(formData);
     if (!result.success) {
       const errors = result.error.flatten().fieldErrors;
-      console.log(errors);
       return rejectWithValue({ msg: "Validation Error", errors });
     }
     try {
@@ -38,7 +37,6 @@ export const loginUser = createAsyncThunk(
     const result = logInSchema.safeParse(formData);
     if (!result.success) {
       const errors = result.error.flatten().fieldErrors;
-      console.log(errors); // optional
       return rejectWithValue({ msg: "Validation Error", errors });
     }
     try {
@@ -122,7 +120,6 @@ const authSlice = createSlice({
           (state.isAuthenticated = action.payload.success ? true : false);
       })
       .addCase(loginUser.rejected, (state, action) => {
-        console.log(action.payload);
         (state.isLoading = false),
           (state.user = null),
           (state.isAuthenticated = false);

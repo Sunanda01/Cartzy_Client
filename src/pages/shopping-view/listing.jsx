@@ -33,8 +33,6 @@ function ShoppingListing() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [open, setOpen] = useState(false);
   const categorySearchParam = searchParams.get("category");
-  console.log(cartItems, "cartItems");
-  console.log(productsList, "Product List");
   function handleAddToCart(getCurrentProductId, getTotalStock) {
     let getCartItem = cartItems?.items || [];
     if (getCartItem?.length) {
@@ -56,7 +54,6 @@ function ShoppingListing() {
         quantity: 1,
       })
     ).then((data) => {
-      console.log(data);
       if (data?.payload.success) {
         toast.success(data?.payload.msg);
         dispatch(fetchCart(user?.id));
@@ -67,7 +64,6 @@ function ShoppingListing() {
   }
 
   function handleGetProductDetails(getCurrentProductId) {
-    console.log(getCurrentProductId);
     dispatch(fetchProductDetails(getCurrentProductId));
   }
 
@@ -79,7 +75,6 @@ function ShoppingListing() {
         queryParams.push(`${key}=${encodeURIComponent(paramValue)}`);
       }
     }
-    console.log(queryParams, "qp");
     return queryParams.join("&");
   }
 
@@ -88,7 +83,6 @@ function ShoppingListing() {
   }
 
   function handleFilters(getSectionId, getCurrentOption) {
-    console.log(getSectionId, getCurrentOption);
     let cpyFilters = { ...filters };
     const indexOfCurrentSection = Object.keys(cpyFilters).indexOf(getSectionId);
     if (indexOfCurrentSection === -1) {
@@ -104,7 +98,6 @@ function ShoppingListing() {
         cpyFilters[getSectionId].push(getCurrentOption);
       else cpyFilters[getSectionId].splice(indexOfCurrentOption, 1);
     }
-    console.log(cpyFilters);
     setFilters(cpyFilters);
     sessionStorage.setItem("filters", JSON.stringify(cpyFilters));
   }
@@ -131,8 +124,6 @@ function ShoppingListing() {
         fetchAllFeaturedProducts({ filterParams: filters, sortParams: sort })
       );
   }, [dispatch, filters, sort]);
-
-  console.log(filters, searchParams, productDetails);
   return (
     <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6">
       <ProductFilter filters={filters} handleFilters={handleFilters} />
@@ -173,6 +164,7 @@ function ShoppingListing() {
           {productsList && productsList.length > 0
             ? productsList.map((productList) => (
                 <ShoppingProductTile
+                  key={productList._id}
                   product={productList}
                   handleGetProductDetails={handleGetProductDetails}
                   handleAddToCart={handleAddToCart}

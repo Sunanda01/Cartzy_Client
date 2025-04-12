@@ -34,8 +34,6 @@ function ShoppingOrders() {
     dispatch(getAllOrdersByUserId(user?.id));
   }, [dispatch]);
 
-  console.log(orderDetails,'order List');
-
   return (
     <Card>
       <CardHeader>
@@ -57,7 +55,7 @@ function ShoppingOrders() {
           <TableBody>
             {orderList && orderList.length > 0
               ? orderList.map((orderItem) => (
-                  <TableRow>
+                  <TableRow key={orderItem?._id}>
                     <TableCell>{orderItem?._id}</TableCell>
                     <TableCell>{orderItem?.orderDate.split("T")[0]}</TableCell>
                     <TableCell>

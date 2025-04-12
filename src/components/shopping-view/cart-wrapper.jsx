@@ -19,7 +19,6 @@ function UserCartWrapper({ cartItems, setOpenCart }) {
           0
         )
       : 0;
-  console.log(cartItems, "czartwrapper");
   return (
     <SheetContent className="sm:max-w-md flex flex-col">
       <SheetHeader>
@@ -29,7 +28,7 @@ function UserCartWrapper({ cartItems, setOpenCart }) {
       <div className="mt-8 space-y-4  overflow-auto">
         {cartItems && cartItems.length > 0
           ? cartItems.map((items) => (
-              <UserCartItemContent getCartItems={items} />
+              <UserCartItemContent key={items._id} getCartItems={items} />
             ))
           : null}
       </div>
@@ -40,7 +39,10 @@ function UserCartWrapper({ cartItems, setOpenCart }) {
         </div>
       </div>
       <Button
-        className="rounded-sm w-full "
+        className={`${
+          cartItems && cartItems.length === 0 ? "cursor-none" : " "
+        }rounded-sm w-full `}
+        disabled={cartItems && cartItems.length === 0}
         onClick={() => {
           navigate("/shop/checkout");
           setOpenCart(false);
@@ -50,9 +52,7 @@ function UserCartWrapper({ cartItems, setOpenCart }) {
       </Button>
       <div className="flex gap-2 justify-center text-muted-foreground">
         <ArrowLeftRightIcon className="w-5 h-5" />
-        <span className="text-sm font-bold">
-          Pay using PAYPAL
-        </span>
+        <span className="text-sm font-bold">Pay using PAYPAL</span>
       </div>
     </SheetContent>
   );

@@ -18,7 +18,6 @@ function ProductImageUpload({
 }) {
   const inputRef = useRef(null);
   function handleImageFileChange(e) {
-    console.log(e.target.files);
     const selectedFile = e.target.files?.[0];
     if (selectedFile) setImageFile(selectedFile);
   }
@@ -40,7 +39,6 @@ function ProductImageUpload({
     const data=new FormData();
     data.append('my_file',imageFile);
     const res=await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/admin/products/upload-image`,data);
-    console.log(res.data);
     if(res) {
         setUploadedImageUrl(res.data.result.url);
         setImageLoadingState(false);

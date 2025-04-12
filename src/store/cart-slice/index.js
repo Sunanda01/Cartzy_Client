@@ -63,7 +63,6 @@ const shoppingCartSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(addToCart.fulfilled, (state, action) => {
-        // console.log(action?.payload,'addToCart');
         (state.isLoading = false), (state.cartItems = action?.payload?.data);
       })
       .addCase(addToCart.rejected, (state) => {
@@ -73,7 +72,6 @@ const shoppingCartSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(fetchCart.fulfilled, (state, action) => {
-        console.log(action?.payload, "fetchCart");
         (state.isLoading = false), (state.cartItems = action?.payload?.data);
       })
       .addCase(fetchCart.rejected, (state) => {
@@ -83,7 +81,6 @@ const shoppingCartSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(updateCart.fulfilled, (state, action) => {
-        console.log(action?.payload, "updateCart");
         (state.isLoading = false), (state.cartItems = action?.payload?.data);
       })
       .addCase(updateCart.rejected, (state) => {
@@ -93,7 +90,6 @@ const shoppingCartSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(deleteCart.fulfilled, (state, action) => {
-        console.log(action?.payload, "deleteCart");
         (state.isLoading = false), (state.cartItems = action?.payload?.data);
       })
       .addCase(deleteCart.rejected, (state) => {

@@ -83,7 +83,6 @@ function HeaderRightContent() {
       dispatch(fetchCart(user?.id));
     }
   }, [dispatch]);
-  // console.log(cartItems?.items, "jdhfjkdshfjhdsjf");
   return (
     <div className="flex flex-col lg:flex-row gap-4 lg:items-center">
       <Sheet open={openCart} onOpenChange={() => setOpenCart(false)}>

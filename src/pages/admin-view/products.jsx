@@ -51,7 +51,6 @@ function AdminProducts() {
             formData,
           })
         ).then((data) => {
-          console.log(data, "edit");
           if (data?.payload.success) {
             dispatch(fetchAllProduct());
             setOpenCreateProductsDialog(false);
@@ -66,7 +65,6 @@ function AdminProducts() {
             image: uploadedImageUrl,
           })
         ).then((data) => {
-          console.log(data);
           if (data?.payload.success) {
             dispatch(fetchAllProduct());
             setOpenCreateProductsDialog(false);
@@ -79,14 +77,13 @@ function AdminProducts() {
         });
   }
 
-  function handleDelete(getCurrentProductId){
-    console.log(getCurrentProductId);
-    dispatch(deleteProduct(getCurrentProductId)).then((data)=>{
-      if(data?.payload.success){
+  function handleDelete(getCurrentProductId) {
+    dispatch(deleteProduct(getCurrentProductId)).then((data) => {
+      if (data?.payload.success) {
         dispatch(fetchAllProduct());
         toast.success(data?.payload.msg);
       }
-    })
+    });
   }
 
   function isFormValid() {
@@ -99,7 +96,6 @@ function AdminProducts() {
     dispatch(fetchAllProduct());
   }, [dispatch]);
 
-  console.log(formData);
   return (
     <Fragment>
       <div className="justify-end flex w-full mb-5">
@@ -111,6 +107,7 @@ function AdminProducts() {
         {productList && productList.length > 0
           ? productList.map((productItem) => (
               <AdminProductTile
+                key={productItem._id}
                 setCurrentEditedId={setCurrentEditedId}
                 setOpenCreateProductsDialog={setOpenCreateProductsDialog}
                 setFormData={setFormData}

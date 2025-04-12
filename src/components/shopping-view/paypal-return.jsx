@@ -18,7 +18,6 @@ function PaypalReturnPage() {
             window.location.href='/shop/payment-success';
         }
     })
-    console.log(payerId,orderId,paymentId,'all id');
   return (
     <Card>
       <CardHeader>
