@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "@/api";
 
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
@@ -12,7 +12,7 @@ export const fetchAllFeaturedProducts = createAsyncThunk(
   "/products/fetchFilteredProducts",
   async ({ filterParams, sortParams }) => {
     const query = new URLSearchParams({ ...filterParams, sortBy: sortParams });
-    const result = await axios.get(
+    const result = await api.get(
       `${import.meta.env.VITE_BACKEND_URL}/api/shop/products/get?${query}`
     );
     return result?.data;
@@ -22,7 +22,7 @@ export const fetchAllFeaturedProducts = createAsyncThunk(
 export const fetchProductDetails = createAsyncThunk(
   "/products/fetchproductDetails",
   async (id) => {
-    const result = await axios.get(
+    const result = await api.get(
       `${import.meta.env.VITE_BACKEND_URL}/api/shop/products/get/${id}`
     );
     return result?.data;

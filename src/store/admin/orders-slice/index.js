@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-
+import api from "@/api";
 const initialState = {
   AdminOrderList: [],
   adminOrderDetails: null,
@@ -10,8 +9,8 @@ const initialState = {
 export const getAllOrder = createAsyncThunk(
   "/orders/get-all-order",
   async () => {
-    const response = await axios.get(
-      `${import.meta.env.VITE_BACKEND_URL}/api/admin/orders/get-order`
+    const response = await api.get(
+      `${import.meta.env.VITE_BACKEND_URL}/api/admin/orders/get-order`,
     );
     return response?.data;
   }
@@ -20,10 +19,10 @@ export const getAllOrder = createAsyncThunk(
 export const getOrderDetails = createAsyncThunk(
   "/orders/get-order-details",
   async (id) => {
-    const response = await axios.get(
+    const response = await api.get(
       `${
         import.meta.env.VITE_BACKEND_URL
-      }/api/admin/orders/get-order-details/${id}`
+      }/api/admin/orders/get-order-details/${id}`,
     );
     return response?.data;
   }
@@ -32,9 +31,9 @@ export const getOrderDetails = createAsyncThunk(
 export const updateOrderDetails = createAsyncThunk(
   "/orders/update",
   async ({ id, orderStatus }) => {
-    const response = await axios.put(
+    const response = await api.put(
       `${import.meta.env.VITE_BACKEND_URL}/api/admin/orders/update/${id}`,
-      { orderStatus }
+      { orderStatus },
     );
     return response?.data;
   }

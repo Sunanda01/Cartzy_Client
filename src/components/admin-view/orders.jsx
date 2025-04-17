@@ -39,11 +39,12 @@ function AdminOrdersView() {
     dispatch(getOrderDetails(getId));
   }
   return (
-    <Card>
+    <Card className="overflow-hidden">
       <CardHeader>
-        <CardTitle>Order History</CardTitle>
+        <CardTitle className="text-lg sm:text-xl">Order History</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="overflow-x-auto ">
+        <div className="min-w-[700px]">
         <Table>
           <TableHeader>
             <TableRow>
@@ -101,6 +102,7 @@ function AdminOrdersView() {
               : null}
           </TableBody>
         </Table>
+        </div>
       </CardContent>
     </Card>
   );

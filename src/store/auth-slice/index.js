@@ -1,11 +1,16 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import api from "@/api";
 import { registerSchema, logInSchema } from "@/validators";
 import { toast } from "sonner";
+const userFromStorage = localStorage.getItem("cartzy_userInfo")
+  ? JSON.parse(localStorage.getItem("cartzy_userInfo"))
+  : null;
 const initialState = {
   isAuthenticated: false,
-  isLoading: true,
-  user: null,
+  isLoading: false,
+  user: userFromStorage,
+  error: null,
 };
 
 export const registerUser = createAsyncThunk(
@@ -19,9 +24,15 @@ export const registerUser = createAsyncThunk(
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/auth/register`,
-        formData,
-        { withCredentials: true }
+        formData
       );
+      if (response?.data?.success) {
+        localStorage.setItem(
+          "cartzy_userInfo",
+          JSON.stringify(response?.data?.data)
+        );
+        localStorage.setItem("cartzy_token", response?.data?.token);
+      }
       return response.data;
     } catch (error) {
       return rejectWithValue({
@@ -42,11 +53,15 @@ export const loginUser = createAsyncThunk(
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/auth/login`,
-        formData,
-        {
-          withCredentials: true,
-        }
+        formData
       );
+      if (response?.data?.success) {
+        localStorage.setItem(
+          "cartzy_userInfo",
+          JSON.stringify(response?.data?.data)
+        );
+        localStorage.setItem("cartzy_token", response?.data?.token);
+      }
       return response.data;
     } catch (error) {
       return rejectWithValue({
@@ -57,21 +72,24 @@ export const loginUser = createAsyncThunk(
 );
 
 export const logoutUser = createAsyncThunk("/auth/logout", async () => {
-  const response = await axios.post(
+  const response = await api.post(
     `${import.meta.env.VITE_BACKEND_URL}/api/auth/logout`,
-    {},
-    {
-      withCredentials: true,
-    }
+    {}
   );
+  if (response?.data?.success) {
+    localStorage.removeItem(
+      "cartzy_userInfo",
+      JSON.stringify(response?.data?.data)
+    );
+    localStorage.removeItem("cartzy_token", response?.data?.token);
+  }
   return response.data;
 });
 
 export const checkAuth = createAsyncThunk("/auth/checkauth", async () => {
-  const response = await axios.get(
+  const response = await api.get(
     `${import.meta.env.VITE_BACKEND_URL}/api/auth/check-auth`,
     {
-      withCredentials: true,
       headers: {
         "Cache-Control": "no-store,no-cache,must-revalidate,proxy-revalidate",
       },
@@ -93,8 +111,8 @@ const authSlice = createSlice({
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         (state.isLoading = false),
-          (state.user = action.payload),
-          (state.isAuthenticated = false);
+          (state.user = action.payload.data),
+          (state.isAuthenticated = true);
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.isLoading = false;
@@ -116,15 +134,14 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         (state.isLoading = false),
-          (state.user = action.payload.success ? action.payload.user : null),
-          (state.isAuthenticated = action.payload.success ? true : false);
+          (state.user = action.payload.data),
+          (state.isAuthenticated = true);
       })
       .addCase(loginUser.rejected, (state, action) => {
         (state.isLoading = false),
           (state.user = null),
           (state.isAuthenticated = false);
         const payload = action.payload;
-
         if (payload?.errors) {
           Object.values(payload.errors).forEach((fieldErrors) => {
             if (fieldErrors?.[0]) toast.error(fieldErrors[0]);
@@ -138,8 +155,8 @@ const authSlice = createSlice({
       })
       .addCase(checkAuth.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.user = action.payload.success ? action.payload.user : null;
-        state.isAuthenticated = action.payload.success;
+        state.user = action.payload.data;
+        state.isAuthenticated = true;
       })
       .addCase(checkAuth.rejected, (state) => {
         state.isLoading = false;

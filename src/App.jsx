@@ -27,6 +27,7 @@ function App() {
   const { user, isAuthenticated, isLoading } = useSelector(
     (state) => state.auth
   );
+  console.log("User ",user);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(checkAuth());
@@ -39,13 +40,13 @@ function App() {
       <Routes>
         <Route
           path="/"
-          element={<CheckAuth isAuthenticated={isAuthenticated} user={user} />}
+          element={<CheckAuth isAuthenticated={isAuthenticated} user={user} isLoading={isLoading}/>}
         />
 
         <Route
           path="/auth"
           element={
-            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+            <CheckAuth isAuthenticated={isAuthenticated} user={user} isLoading={isLoading}>
               <AuthLayout />
             </CheckAuth>
           }
@@ -57,7 +58,7 @@ function App() {
         <Route
           path="/admin"
           element={
-            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+            <CheckAuth isAuthenticated={isAuthenticated} user={user} isLoading={isLoading}>
               <AdminLayout />
             </CheckAuth>
           }
@@ -70,7 +71,7 @@ function App() {
         <Route
           path="/shop"
           element={
-            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+            <CheckAuth isAuthenticated={isAuthenticated} user={user} isLoading={isLoading}>
               <ShoppingLayout />
             </CheckAuth>
           }

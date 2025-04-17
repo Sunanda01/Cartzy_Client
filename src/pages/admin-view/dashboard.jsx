@@ -1,5 +1,6 @@
 import ProductImageUpload from "@/components/admin-view/image-upload";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { addFeatureImage, getFeatureImages } from "@/store/common-slice";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -40,17 +41,21 @@ function AdminDashboard() {
         isCustomStyling={true}
         // isEditMode={currentEditedId !== null}
       />
-      <Button onClick={handleUploadFeatureImage} className="mt-5 w-full">
+      <Button onClick={handleUploadFeatureImage} className="mt-5 w-full" disabled={imageLoadingState}>
         Upload
       </Button>
       <div className="flex flex-col gap-4 mt-5">
         {featureImageList && featureImageList.length > 0
           ? featureImageList.map((featureImgItem) => (
-              <div className="relative" key={featureImgItem.name}>
-                <img
+              <div className="relative" key={featureImgItem._id}>
+                <Card className="shadow-md rounded-lg overflow-hidden" key={featureImgItem._id}>
+                  <CardContent className="p-0">
+                  <img
                   src={featureImgItem.image}
-                  className="w-full h-[300px] object-cover rounded-t-lg"
+                  className="w-full h-[300px] object-cover transition-transform duration-300 hover:scale-105"
                 />
+                  </CardContent>
+                </Card>
               </div>
             ))
           : null}

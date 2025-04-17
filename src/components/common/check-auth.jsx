@@ -1,7 +1,9 @@
 import { Navigate, useLocation } from "react-router-dom";
 
-function CheckAuth({ isAuthenticated, user, children }) {
+function CheckAuth({ isAuthenticated, user, isLoading, children }) {
   const location = useLocation();
+  // console.log("Role ", user?.role);
+ 
   if (location.pathname === "/") {
     if (!isAuthenticated) {
       return <Navigate to="/auth/login" />;
@@ -13,6 +15,10 @@ function CheckAuth({ isAuthenticated, user, children }) {
       }
     }
   }
+
+  // if (isAuthenticated && !user?.role) {
+  //   return <Navigate to="/unauth-page" />;
+  // }
 
   if (
     !isAuthenticated &&

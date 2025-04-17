@@ -7,6 +7,7 @@ const initialState = {
 };
 import { addressSchema } from "@/validators";
 import { toast } from "sonner";
+import api from "@/api";
 
 export const addNewAddress = createAsyncThunk(
   "/addresses/addNewAddress",
@@ -29,7 +30,7 @@ export const addNewAddress = createAsyncThunk(
       });
     }
     try {
-      const response = await axios.post(
+      const response = await api.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/shop/address/add`,
         result.data
       );
@@ -46,7 +47,7 @@ export const addNewAddress = createAsyncThunk(
 export const fetchAllAddresses = createAsyncThunk(
   "/addresses/fetchAllAddresses",
   async (userId) => {
-    const response = await axios.get(
+    const response = await api.get(
       `${import.meta.env.VITE_BACKEND_URL}/api/shop/address/get/${userId}`
     );
 
@@ -74,7 +75,7 @@ export const editAddress = createAsyncThunk(
       });
     }
     try {
-      const response = await axios.put(
+      const response = await api.put(
         `${
           import.meta.env.VITE_BACKEND_URL
         }/api/shop/address/update/${userId}/${addressId}`,
@@ -93,7 +94,7 @@ export const editAddress = createAsyncThunk(
 export const deleteAddress = createAsyncThunk(
   "/addresses/deleteAddress",
   async ({ userId, addressId }) => {
-    const response = await axios.delete(
+    const response = await api.delete(
       `${
         import.meta.env.VITE_BACKEND_URL
       }/api/shop/address/delete/${userId}/${addressId}`

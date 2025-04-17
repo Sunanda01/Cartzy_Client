@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import api from "@/api";
 import { productSchema, updateProductSchema } from "@/validators";
 import { toast } from "sonner";
 const initialState = {
@@ -21,14 +21,9 @@ export const addNewProduct = createAsyncThunk(
     }
 
     try {
-      const response = await axios.post(
+      const response = await api.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/admin/products/add`,
-        result.data, // use validated + coerced data
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+        result.data // use validated + coerced data
       );
       return response?.data;
     } catch (err) {
@@ -43,7 +38,7 @@ export const addNewProduct = createAsyncThunk(
 export const fetchAllProduct = createAsyncThunk(
   "/products/fetchallproduct",
   async () => {
-    const response = await axios.get(
+    const response = await api.get(
       `${import.meta.env.VITE_BACKEND_URL}/api/admin/products/get`
     );
     return response?.data;
@@ -71,14 +66,9 @@ export const editProduct = createAsyncThunk(
           errors: formattedErrors,
         });
       }
-      const response = await axios.put(
+      const response = await api.put(
         `${import.meta.env.VITE_BACKEND_URL}/api/admin/products/edit/${id}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+        formData
       );
       return response?.data;
     } catch (error) {
@@ -93,7 +83,7 @@ export const editProduct = createAsyncThunk(
 export const deleteProduct = createAsyncThunk(
   "/products/deleteproduct",
   async (id) => {
-    const response = await axios.delete(
+    const response = await api.delete(
       `${import.meta.env.VITE_BACKEND_URL}/api/admin/products/delete/${id}`
     );
     return response?.data;
