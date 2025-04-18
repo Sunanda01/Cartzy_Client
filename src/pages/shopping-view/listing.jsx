@@ -6,7 +6,7 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, FilterIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { sortOptions } from "@/config";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,8 +20,16 @@ import ProductFilter from "../../components/shopping-view/filter";
 import ProductDetailsDialog from "@/components/shopping-view/productDetail";
 import { addToCart, fetchCart } from "@/store/cart-slice";
 import { toast } from "sonner";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 function ShoppingListing() {
+  const [showMobileFilter, setShowMobileFilter] = useState(false);
   const dispatch = useDispatch();
   const { productsList, productDetails } = useSelector(
     (state) => state.shopProducts
@@ -99,6 +107,13 @@ function ShoppingListing() {
       else cpyFilters[getSectionId].splice(indexOfCurrentOption, 1);
     }
     setFilters(cpyFilters);
+
+    if (getSectionId === "CLEAR_ALL") {
+      setFilters({});
+      sessionStorage.removeItem("filters");
+      return;
+    }
+
     sessionStorage.setItem("filters", JSON.stringify(cpyFilters));
   }
 
@@ -125,44 +140,67 @@ function ShoppingListing() {
       );
   }, [dispatch, filters, sort]);
   return (
-    <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6">
-      <ProductFilter filters={filters} handleFilters={handleFilters} />
-      <div className="bg-background rounded-lg w-full shadow-sm">
-        <div className="border-b p-4 flex items-center justify-between ">
-          <h2 className="text-lg font-semibold">All Products</h2>
-          <div className="flex items-center gap-3">
-            <span className="text-muted-foreground ">
-              {productsList?.length} Products
-            </span>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+    <>
+      <Sheet open={showMobileFilter} onOpenChange={setShowMobileFilter}>
+        <SheetContent side="left" className="w-[260px] sm:w-[300px]">
+          <div className="mt-4 overflow-y-auto h-full">
+            <ProductFilter filters={filters} handleFilters={handleFilters} />
+          </div>
+        </SheetContent>
+      </Sheet>
+      <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-6 p-4 sm:p-5 md:p-6">
+        <div className="hidden lg:block min-w-[200px]">
+          <ProductFilter filters={filters} handleFilters={handleFilters} />
+        </div>
+        <div className="bg-background rounded-lg w-full shadow-sm">
+          <div className="border-b p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <h2 className="text-lg font-semibold">All Products</h2>
+            <div className="flex items-center gap-3">
+              <span className="text-muted-foreground ">
+                {productsList?.length} Products
+              </span>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex justify-center gap-1"
+                  >
+                    <ArrowUpDown className="h-4 w-4" />
+                    <span>Sort by</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-[200px]">
+                  <DropdownMenuRadioGroup
+                    value={sort}
+                    onValueChange={handleSort}
+                  >
+                    {sortOptions.map((sortItem) => (
+                      <DropdownMenuRadioItem
+                        key={sortItem.id}
+                        value={sortItem.id}
+                      >
+                        {sortItem.label}
+                      </DropdownMenuRadioItem>
+                    ))}
+                  </DropdownMenuRadioGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <div className="flex items-center justify-end lg:hidden">
                 <Button
                   variant="outline"
                   size="sm"
-                  className="flex justify-center gap-1"
+                  onClick={() => setShowMobileFilter(true)}
                 >
-                  <ArrowUpDown className="h-4 w-4" />
-                  <span>Sort by</span>
+                  <FilterIcon className="h-4 w-4" />
+                  <span>Filters</span>
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-[200px]">
-                <DropdownMenuRadioGroup value={sort} onValueChange={handleSort}>
-                  {sortOptions.map((sortItem) => (
-                    <DropdownMenuRadioItem
-                      key={sortItem.id}
-                      value={sortItem.id}
-                    >
-                      {sortItem.label}
-                    </DropdownMenuRadioItem>
-                  ))}
-                </DropdownMenuRadioGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
+              </div>
+            </div>
           </div>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
-          {productsList && productsList.length > 0
-            ? productsList.map((productList) => (
+          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+            {productsList && productsList.length > 0 ? (
+              productsList.map((productList) => (
                 <ShoppingProductTile
                   key={productList._id}
                   product={productList}
@@ -170,15 +208,20 @@ function ShoppingListing() {
                   handleAddToCart={handleAddToCart}
                 />
               ))
-            : null}
+            ) : (
+              <div className="col-span-full text-center text-muted-foreground py-10">
+                No products found matching the selected filters.
+              </div>
+            )}
+          </div>
         </div>
+        <ProductDetailsDialog
+          open={open}
+          setOpen={setOpen}
+          productDetails={productDetails}
+        />
       </div>
-      <ProductDetailsDialog
-        open={open}
-        setOpen={setOpen}
-        productDetails={productDetails}
-      />
-    </div>
+    </>
   );
 }
 

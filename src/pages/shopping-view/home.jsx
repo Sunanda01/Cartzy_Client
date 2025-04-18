@@ -125,7 +125,7 @@ function ShoppingHome() {
   }, [dispatch]);
   return (
     <div className="flex flex-col min-h-screen">
-      <div className="relative w-full h-[600px] overflow-hidden">
+      <div className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden">
         {featureImageList && featureImageList.length > 0
           ? featureImageList.map((slide, index) => (
               <img
@@ -141,7 +141,7 @@ function ShoppingHome() {
         <Button
           variant="outline"
           size="icon"
-          className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-white/80"
+          className="absolute top-1/2 left-2 sm:left-4 transform -translate-y-1/2 bg-white/80"
           onClick={() =>
             setCurrentSlide(
               (prevSlide) =>
@@ -150,27 +150,27 @@ function ShoppingHome() {
             )
           }
         >
-          <ChevronLeftIcon className="w-4 h-4" />
+          <ChevronLeftIcon className="w-5 h-5 sm:w-6 sm:h-6" />
         </Button>
         <Button
           variant="outline"
           size="icon"
-          className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-white/80"
+          className="absolute top-1/2 sm:right-4 right-2 transform -translate-y-1/2 bg-white/80"
           onClick={() =>
             setCurrentSlide(
               (prevSlide) => (prevSlide + 1) % featureImageList.length
             )
           }
         >
-          <ChevronRightIcon className="w-4 h-4" />
+          <ChevronRightIcon className="w-5 h-5 sm:w-6 sm:h-6" />
         </Button>
       </div>
-      <section className="py-12 bg-gray-50">
+      <section className="py-10 sm:py-12 bg-gray-50">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-8">
+          <h2 className="sm:text-3xl text-2xl font-bold text-center mb-8">
             Shop by category
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {categoriesWithIcon.map((categoryItem) => (
               <Card
                 key={categoryItem.label}
@@ -179,9 +179,9 @@ function ShoppingHome() {
                 }
                 className="cursor-pointer hover:shadow-lg transition-shadow"
               >
-                <CardContent className="flex flex-col items-center justify-center p-6">
-                  <categoryItem.icon className="w-12 h-12 mb-4 text-primary" />
-                  <span className="font-bold">{categoryItem.label}</span>
+                <CardContent className="flex flex-col items-center justify-center p-4 sm:p-6">
+                  <categoryItem.icon className="sm:w-12 sm:h-12 w-10 h-10 mb-4 text-primary" />
+                  <span className="font-semibold text-sm sm:text-base text-center">{categoryItem.label}</span>
                 </CardContent>
               </Card>
             ))}
@@ -209,9 +209,9 @@ function ShoppingHome() {
         </div>
       </section>
 
-      <section className="py-12">
+      <section className="sm:py-12 py-10">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-8">
+          <h2 className="sm:text-3xl text-2xl font-bold text-center mb-8">
             Feature Products
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">

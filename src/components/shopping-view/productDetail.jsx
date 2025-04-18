@@ -72,15 +72,14 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
         setReviewMsg("");
         dispatch(getReviews(productDetails?._id));
         toast.success(data?.payload?.msg);
-      }
-      else{
-        toast.info(data?.payload?.msg || "An unexpected error occurred.")
+      } else {
+        toast.info(data?.payload?.msg || "An unexpected error occurred.");
       }
     });
   }
-    useEffect(() => {
-      if (productDetails !== null) dispatch(getReviews(productDetails?._id));
-    }, [productDetails]);
+  useEffect(() => {
+    if (productDetails !== null) dispatch(getReviews(productDetails?._id));
+  }, [productDetails]);
 
   const averageReview =
     reviews && reviews.length > 0
@@ -89,8 +88,8 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
       : 0;
   return (
     <Dialog open={open} onOpenChange={handleDialogClose}>
-      <DialogContent className="grid grid-cols-2 gap-8 sm:p-12  max-w-[90vw] sm:max-w-[80vw] lg:max-w-[70vw]">
-        <div className="relative rounded-lg overflow-hidden">
+      <DialogContent className="lg:grid lg:grid-cols-2 gap-8 sm:p-6 md:p-8 lg:p-12 max-w-[95vw] sm:max-w-[90vw] lg:max-w-[70vw] flex flex-col p-4 overflow-y-auto max-h-[90vh]">
+        <div className="relative rounded-lg overflow-hidden w-full">
           <img
             src={productDetails?.image}
             alt={productDetails?.title}
@@ -99,34 +98,36 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
             className="aspect-square w-full object-cover"
           />
         </div>
-        <div className="">
+        <div className="flex flex-col justify-between w-full">
           <div>
-            <h1 className="font-extrabold text-3xl">{productDetails?.title}</h1>
-            <p className="text-muted-foreground text-xl mt-2 mb-5">
+            <h1 className="font-extrabold text-2xl md:text-3xl">{productDetails?.title}</h1>
+            <p className="text-muted-foreground text-base md:text-lg mt-2 mb-4 text-justify">
               {productDetails?.description}
             </p>
           </div>
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between mb-2">
             <span
               className={`${
                 productDetails?.salePrice > 0 ? "line-through" : null
-              } text-lg font-semibold text-primary`}
+              } text-base md:text-lg font-semibold text-primary`}
             >
               ${productDetails?.price}
             </span>
             {productDetails?.salePrice > 0 ? (
-              <span className="text-lg font-bold text-muted-foreground">
+              <span className="text-base md:text-lg font-bold text-muted-foreground">
                 ${productDetails?.salePrice}
               </span>
             ) : null}
           </div>
-          <div className="flex gap-2 mt-2 items-center">
-            <div className="flex items-center gap-0.5">
+          <div className="flex gap-2 mt-2 items-center mb-4">
+            {/* <div className="flex items-center gap-0.5"> */}
               <StarRatingComponent rating={averageReview} />
-            </div>
-            <span className="text-muted-foreground">({averageReview.toFixed(2)})</span>
+            {/* </div> */}
+            <span className="text-muted-foreground text-sm">
+              ({averageReview.toFixed(2)})
+            </span>
           </div>
-          <div className="mt-5 mb-5">
+          <div className="mb-4">
             {productDetails?.totalStock === 0 ? (
               <Button className="w-full opacity-60 cursor-not-allowed">
                 Out Of Stock
@@ -146,34 +147,38 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
             )}
           </div>
           <Separator />
-          <div className="max-h-[300px] overflow-auto">
+          <div className="max-h-[250px] overflow-auto mb-6">
             <h2 className="font-bold text-xl mb-4">Reviews</h2>
             <div className="grid gap-6">
-            {reviews && reviews.length>0?(reviews.map((review)=>(
-              <div className="flex gap-4" key={review?._id}>
-              
-              <Avatar className="w-10 h-10 border">
-                <AvatarFallback> {review?.userName[0].toUpperCase()}</AvatarFallback>
-              </Avatar>
-              <div className="grid gap-1">
-                <div className="flex items-center gap-2">
-                  
-                  <h3 className="font-bold">{review?.userName}</h3>
-                </div>
-                <div className="flex items-center gap-0.5">
-                <StarRatingComponent rating={review?.reviewValue} />
-                </div>
-                <p className="text-muted-foreground">
-                  {review?.reviewMessage}
-                </p>
-              </div>
+              {reviews && reviews.length > 0 ? (
+                reviews.map((review) => (
+                  <div className="flex gap-4" key={review?._id}>
+                    <Avatar className="w-10 h-10 border">
+                      <AvatarFallback>
+                        {" "}
+                        {review?.userName[0].toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="grid gap-1">
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-bold">{review?.userName}</h3>
+                      </div>
+                      <div className="flex items-center gap-0.5">
+                        <StarRatingComponent rating={review?.reviewValue} />
+                      </div>
+                      <p className="text-muted-foreground text-sm">
+                        {review?.reviewMessage}
+                      </p>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <h1 className="text-sm text-muted-foreground">No Reviews</h1>
+              )}
             </div>
-            ))):(<h1>No Reviews</h1>)}
-              
-            </div>
-            <div className="mt-10 flex-col flex gap-2">
+            <div className="mt-4 flex-col flex gap-2">
               <Label>Write a Review.....</Label>
-              <div className="flex gap-0.5">
+              <div className="flex gap-1">
                 <StarRatingComponent
                   rating={rating}
                   handleRatingChange={handleRatingChange}

@@ -22,7 +22,10 @@ function UserCartWrapper({ cartItems, setOpenCart }) {
   return (
     <SheetContent className="sm:max-w-md flex flex-col">
       <SheetHeader>
-        <SheetTitle>Your Cart</SheetTitle>
+        <SheetTitle className="flex flex-row gap-3">
+          <img src="/cartzy.svg" alt="Cartzy Logo" className="w-8 h-8" />
+          <span className="text-xl font-bold">Your Cart</span>
+        </SheetTitle>
       </SheetHeader>
 
       <div className="mt-8 space-y-4  overflow-auto">

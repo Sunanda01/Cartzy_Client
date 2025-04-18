@@ -9,7 +9,8 @@ function ShoppingProductTile({
   handleAddToCart,
 }) {
   return (
-    <Card className="w-full mx-auto max-w-sm">
+    <>
+    <Card className="w-full min-w-[200px] max-w-sm mx-auto flex flex-col h-full"> 
       <div
         className="relative cursor-pointer"
         onClick={() => handleGetProductDetails(product?._id)}
@@ -17,7 +18,7 @@ function ShoppingProductTile({
         <img
           src={product?.image}
           alt={product?.title}
-          className="w-full h-[300px] object-cover rounded-t-lg"
+          className="w-full h-[250px] object-cover rounded-t-lg"
         />
         {product?.totalStock === 0 ? (
           <Badge className="absolute top-2 left-2 rounded-full bg-red-500 hover:bg-red-600">
@@ -34,17 +35,16 @@ function ShoppingProductTile({
         ) : null}
       </div>
 
-      <CardContent className="p-4">
-        <h2 className="text-xl font-bold mb-2 mt-2">{product?.title}</h2>
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-sm text-muted-foreground">
-            {product?.category}
-          </span>
-          <span className="text-sm text-muted-foreground">
-            {product?.brand}
-          </span>
+      <CardContent className="flex-1 flex flex-col justify-between p-4 ">
+        <div className="mb-4">
+          <h2 className="text-xl font-bold line-clamp-2">{product?.title}</h2>
+          <div className="flex justify-between items-center mt-1 text-sm text-muted-foreground">
+            <span>{product?.category}</span>
+            <span>{product?.brand}</span>
+          </div>
         </div>
-        <div className="flex justify-between items-center mb-2">
+
+        <div className="flex justify-between items-center mt-auto">
           <span
             className={`${
               product?.salePrice > 0 ? "line-through" : null
@@ -57,11 +57,9 @@ function ShoppingProductTile({
           ) : null}
         </div>
       </CardContent>
-      <CardFooter className="flex justify-between items-center">
+      <CardFooter className="mt-auto p-4 pt-0">
         {product?.totalStock === 0 ? (
-          <Button
-            className="w-full opacity-60 cursor-not-allowed"
-          >
+          <Button className="w-full opacity-60 cursor-not-allowed">
             Out Of Stock
           </Button>
         ) : (
@@ -74,6 +72,7 @@ function ShoppingProductTile({
         )}
       </CardFooter>
     </Card>
+    </>
   );
 }
 

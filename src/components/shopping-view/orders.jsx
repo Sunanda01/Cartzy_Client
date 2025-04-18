@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Card, CardContent, CardHeader, CardTitle,CardFooter } from "../ui/card";
 import { Dialog } from "../ui/dialog";
 import {
   Table,
@@ -35,7 +35,8 @@ function ShoppingOrders() {
   }, [dispatch]);
 
   return (
-    <Card>
+    <>
+    <Card className="lg:block hidden">
       <CardHeader>
         <CardTitle>Order History</CardTitle>
       </CardHeader>
@@ -97,6 +98,57 @@ function ShoppingOrders() {
         </Table>
       </CardContent>
     </Card>
+
+    {/* Order Cards for mobile (≤640px) */}
+    {orderList?.map((orderItem) => (
+        <Card
+          key={orderItem._id}
+          className="block lg:hidden border p-4 rounded-lg shadow-sm bg-white space-y-2 m-2 min-w-[360px]"
+        >
+          <CardContent className="flex flex-col gap-2">
+            <div>
+              <strong>Order ID:</strong> {orderItem._id}
+            </div>
+            <div>
+              <strong>Date:</strong> {orderItem.orderDate.split("T")[0]}
+            </div>
+            <div>
+              <strong>Status:</strong>{" "}
+              <Badge
+                className={`py-1 px-3 ${
+                  orderItem.orderStatus === "confirmed"
+                    ? "bg-green-500"
+                    : orderItem.orderStatus === "rejected"
+                    ? "bg-red-600"
+                    : "bg-black"
+                }`}
+              >
+                {orderItem.orderStatus}
+              </Badge>
+            </div>
+            <div>
+              <strong>Total:</strong> ${orderItem.totalAmount.toFixed(2)}
+            </div>
+          </CardContent>
+          <div className="flex items-center justify-center">
+            <CardFooter>
+              <Dialog
+                open={openDetailsDialog}
+                onOpenChange={() => {
+                  setOpenDetailsDialog(false);
+                  dispatch(resetOrderDetails());
+                }}
+              >
+                <Button onClick={() => handleFetchOrderDetails(orderItem._id)}>
+                  View Details
+                </Button>
+                <ShoppingOrderDetailsView orderDetails={orderDetails} />
+              </Dialog>
+            </CardFooter>
+          </div>
+        </Card>
+      ))}
+    </>
   );
 }
 
