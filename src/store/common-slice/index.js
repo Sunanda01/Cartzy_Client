@@ -1,4 +1,4 @@
-import api from "@/api";
+import axiosInstance from "@/axiosInstance";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
@@ -9,7 +9,7 @@ const initialState = {
 export const getFeatureImages = createAsyncThunk(
   "/order/getFeatureImages",
   async () => {
-    const response = await api.get(
+    const response = await axiosInstance.get(
       `${import.meta.env.VITE_BACKEND_URL}/api/common/feature/get`
     );
 
@@ -20,7 +20,7 @@ export const getFeatureImages = createAsyncThunk(
 export const addFeatureImage = createAsyncThunk(
   "/order/addFeatureImage",
   async (image) => {
-    const response = await api.post(
+    const response = await axiosInstance.post(
       `${import.meta.env.VITE_BACKEND_URL}/api/common/feature/add`,
       { image }
     );

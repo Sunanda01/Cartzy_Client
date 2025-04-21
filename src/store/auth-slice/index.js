@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import api from "@/api";
+import axiosInstance from "@/axiosInstance";
 import { registerSchema, logInSchema } from "@/validators";
 import { toast } from "sonner";
 const userFromStorage = localStorage.getItem("cartzy_userInfo")
@@ -72,7 +72,7 @@ export const loginUser = createAsyncThunk(
 );
 
 export const logoutUser = createAsyncThunk("/auth/logout", async () => {
-  const response = await api.post(
+  const response = await axiosInstance.post(
     `${import.meta.env.VITE_BACKEND_URL}/api/auth/logout`,
     {}
   );
@@ -86,17 +86,17 @@ export const logoutUser = createAsyncThunk("/auth/logout", async () => {
   return response.data;
 });
 
-export const checkAuth = createAsyncThunk("/auth/checkauth", async () => {
-  const response = await api.get(
-    `${import.meta.env.VITE_BACKEND_URL}/api/auth/check-auth`,
-    {
-      headers: {
-        "Cache-Control": "no-store,no-cache,must-revalidate,proxy-revalidate",
-      },
-    }
-  );
-  return response.data;
-});
+// export const checkAuth = createAsyncThunk("/auth/checkauth", async () => {
+//   const response = await api.get(
+//     `${import.meta.env.VITE_BACKEND_URL}/api/auth/check-auth`,
+//     {
+//       headers: {
+//         "Cache-Control": "no-store,no-cache,must-revalidate,proxy-revalidate",
+//       },
+//     }
+//   );
+//   return response.data;
+// });
 
 const authSlice = createSlice({
   name: "auth",
@@ -150,19 +150,19 @@ const authSlice = createSlice({
           toast.error(payload?.msg || "Something went wrong");
         }
       })
-      .addCase(checkAuth.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(checkAuth.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.user = action.payload.data;
-        state.isAuthenticated = true;
-      })
-      .addCase(checkAuth.rejected, (state) => {
-        state.isLoading = false;
-        state.user = null;
-        state.isAuthenticated = false;
-      })
+      // .addCase(checkAuth.pending, (state) => {
+      //   state.isLoading = true;
+      // })
+      // .addCase(checkAuth.fulfilled, (state, action) => {
+      //   state.isLoading = false;
+      //   state.user = action.payload.data;
+      //   state.isAuthenticated = true;
+      // })
+      // .addCase(checkAuth.rejected, (state) => {
+      //   state.isLoading = false;
+      //   state.user = null;
+      //   state.isAuthenticated = false;
+      // })
       .addCase(logoutUser.fulfilled, (state) => {
         state.isLoading = false;
         state.user = null;

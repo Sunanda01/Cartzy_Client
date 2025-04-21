@@ -15,14 +15,19 @@ const initialState = {
 function AuthRegister() {
   const [formdata, setFormdata] = useState(initialState);
   const dispatch = useDispatch();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   function onSubmit(e) {
     e.preventDefault();
     dispatch(registerUser(formdata)).then((data) => {
       if (data?.payload?.success) {
         toast.success(data?.payload?.msg);
-      }
-      else{
+        const role = data?.payload?.data?.role;
+        if (role === "admin") {
+          navigate("/admin/dashboard");
+        } else {
+          navigate("/shop/home");
+        }
+      } else {
         toast.error(data?.payload?.msg);
       }
     });

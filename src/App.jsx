@@ -13,44 +13,39 @@ import ShoppingCheckout from "./pages/shopping-view/checkout";
 import ShoppingHome from "./pages/shopping-view/home";
 import ShoppingListing from "./pages/shopping-view/listing";
 import UnauthPage from "./pages/unauth-page";
-import { useDispatch, useSelector } from "react-redux";
-import CheckAuth from "./components/common/check-auth";
+import { useSelector } from "react-redux";
+// import CheckAuth from "./components/common/check-auth";
 import { useEffect } from "react";
-import { checkAuth } from "./store/auth-slice";
+// import { checkAuth } from "./store/auth-slice";
 import { Skeleton } from "@/components/ui/skeleton";
 import PaypalReturnPage from "./components/shopping-view/paypal-return";
 import PaypalCancelPage from "./components/shopping-view/paypal-cancel";
 import PaymentSuccess from "./components/shopping-view/payment-success";
 import SearchProducts from "./pages/shopping-view/search";
+import { setupInterceptors } from "./axiosInstance";
+import store from "./store/store";
+import AdminRoute from "./private/AdminRoute";
+import ProtectedRoute from "./private/ProtectedRoute";
 
 function App() {
-  const { user, isAuthenticated, isLoading } = useSelector(
-    (state) => state.auth
-  );
-  console.log("User ",user);
-  const dispatch = useDispatch();
+  const { isLoading } = useSelector((state) => state.auth);
+  // const navigate = useNavigate();
+  // const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(checkAuth());
-  }, [dispatch]);
+    setupInterceptors(store);
+  }, []);
 
   if (isLoading) return <Skeleton className="w-[800px] h-[600px] bg-black" />;
 
   return (
     <div className="flex flex-col overflow-hidden bg-white">
       <Routes>
-        <Route
+        {/* <Route
           path="/"
           element={<CheckAuth isAuthenticated={isAuthenticated} user={user} />}
-        />
+        /> */}
 
-        <Route
-          path="/auth"
-          element={
-            <CheckAuth isAuthenticated={isAuthenticated} user={user} >
-              <AuthLayout />
-            </CheckAuth>
-          }
-        >
+        <Route path="/auth" element={<AuthLayout />}>
           <Route path="login" element={<AuthLogin />} />
           <Route path="register" element={<AuthRegister />} />
         </Route>
@@ -58,9 +53,9 @@ function App() {
         <Route
           path="/admin"
           element={
-            <CheckAuth isAuthenticated={isAuthenticated} user={user} >
+            <AdminRoute>
               <AdminLayout />
-            </CheckAuth>
+            </AdminRoute>
           }
         >
           <Route path="dashboard" element={<AdminDashboard />} />
@@ -71,9 +66,9 @@ function App() {
         <Route
           path="/shop"
           element={
-            <CheckAuth isAuthenticated={isAuthenticated} user={user} >
+            <ProtectedRoute>
               <ShoppingLayout />
-            </CheckAuth>
+            </ProtectedRoute>
           }
         >
           <Route path="account" element={<ShoppingAccount />} />

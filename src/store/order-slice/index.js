@@ -1,4 +1,4 @@
-import api from "@/api";
+import axiosInstance from "@/axiosInstance";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 const initialState = {
@@ -13,7 +13,7 @@ const initialState = {
 export const createNewOrder = createAsyncThunk(
   "/order/createNewOrder",
   async (orderData) => {
-    const response = await api.post(
+    const response = await axiosInstance.post(
       `${import.meta.env.VITE_BACKEND_URL}/api/shop/orders/create`,
       orderData
     );
@@ -24,7 +24,7 @@ export const createNewOrder = createAsyncThunk(
 export const capturePayment = createAsyncThunk(
   "/order/capturePayment",
   async ({ paymentId, payerId, orderId }) => {
-    const response = await api.post(
+    const response = await axiosInstance.post(
       `${import.meta.env.VITE_BACKEND_URL}/api/shop/orders/capture`,
       { paymentId, payerId, orderId }
     );
@@ -35,7 +35,7 @@ export const capturePayment = createAsyncThunk(
 export const getAllOrdersByUserId = createAsyncThunk(
   "/order/getAllOrdersByUserId",
   async (userId) => {
-    const response = await api.get(
+    const response = await axiosInstance.get(
       `${import.meta.env.VITE_BACKEND_URL}/api/shop/orders/list/${userId}`
     );
 
@@ -46,7 +46,7 @@ export const getAllOrdersByUserId = createAsyncThunk(
 export const getOrderDetails = createAsyncThunk(
   "/order/getOrderDetails",
   async (id) => {
-    const response = await api.get(
+    const response = await axiosInstance.get(
       `${import.meta.env.VITE_BACKEND_URL}/api/shop/orders/details/${id}`
     );
 

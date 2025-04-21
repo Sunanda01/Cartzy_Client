@@ -3,7 +3,7 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { FileIcon, UploadCloudIcon, XIcon } from "lucide-react";
 import { Button } from "../ui/button";
-import api from "@/api";
+import api from "@/axiosInstance";
 import { Skeleton } from "../ui/skeleton";
 
 function ProductImageUpload({

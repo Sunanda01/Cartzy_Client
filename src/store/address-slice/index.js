@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+
 
 const initialState = {
   isLoading: false,
@@ -7,7 +7,7 @@ const initialState = {
 };
 import { addressSchema } from "@/validators";
 import { toast } from "sonner";
-import api from "@/api";
+import axiosInstance from "@/axiosInstance";
 
 export const addNewAddress = createAsyncThunk(
   "/addresses/addNewAddress",
@@ -30,7 +30,7 @@ export const addNewAddress = createAsyncThunk(
       });
     }
     try {
-      const response = await api.post(
+      const response = await axiosInstance.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/shop/address/add`,
         result.data
       );
@@ -47,7 +47,7 @@ export const addNewAddress = createAsyncThunk(
 export const fetchAllAddresses = createAsyncThunk(
   "/addresses/fetchAllAddresses",
   async (userId) => {
-    const response = await api.get(
+    const response = await axiosInstance.get(
       `${import.meta.env.VITE_BACKEND_URL}/api/shop/address/get/${userId}`
     );
 
@@ -75,7 +75,7 @@ export const editAddress = createAsyncThunk(
       });
     }
     try {
-      const response = await api.put(
+      const response = await axiosInstance.put(
         `${
           import.meta.env.VITE_BACKEND_URL
         }/api/shop/address/update/${userId}/${addressId}`,
@@ -94,7 +94,7 @@ export const editAddress = createAsyncThunk(
 export const deleteAddress = createAsyncThunk(
   "/addresses/deleteAddress",
   async ({ userId, addressId }) => {
-    const response = await api.delete(
+    const response = await axiosInstance.delete(
       `${
         import.meta.env.VITE_BACKEND_URL
       }/api/shop/address/delete/${userId}/${addressId}`
