@@ -111,11 +111,11 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
                 productDetails?.salePrice > 0 ? "line-through" : null
               } text-base md:text-lg font-semibold text-primary`}
             >
-              ${productDetails?.price}
+              ₹{productDetails?.price}
             </span>
             {productDetails?.salePrice > 0 ? (
               <span className="text-base md:text-lg font-bold text-muted-foreground">
-                ${productDetails?.salePrice}
+                ₹{productDetails?.salePrice}
               </span>
             ) : null}
           </div>

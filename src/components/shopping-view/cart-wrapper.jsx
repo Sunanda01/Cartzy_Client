@@ -38,7 +38,7 @@ function UserCartWrapper({ cartItems, setOpenCart }) {
       <div className="mt-8 space-y-4 flex-1">
         <div className="flex justify-between">
           <span className="font-bold">Total</span>
-          <span className="font-bold">${totalAmount.toFixed(2)}</span>
+          <span className="font-bold">₹{totalAmount.toFixed(2)}</span>
         </div>
       </div>
       <Button
@@ -55,7 +55,7 @@ function UserCartWrapper({ cartItems, setOpenCart }) {
       </Button>
       <div className="flex gap-2 justify-center text-muted-foreground">
         <ArrowLeftRightIcon className="w-5 h-5" />
-        <span className="text-sm font-bold">Pay using PAYPAL</span>
+        <span className="text-sm font-bold">Pay using PAYPAL in $</span>
       </div>
     </SheetContent>
   );

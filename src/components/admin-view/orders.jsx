@@ -87,7 +87,7 @@ function AdminOrdersView() {
                           </Badge>
                         </TableCell>
                         <TableCell>
-                          ${orderItem?.totalAmount.toFixed(2)}
+                          ₹{orderItem?.totalAmount * (83.25).toFixed(2)}
                         </TableCell>
                         <TableCell>
                           <Dialog
@@ -151,7 +151,8 @@ function AdminOrdersView() {
               </Badge>
             </div>
             <div>
-              <strong>Total:</strong> ${orderItem.totalAmount.toFixed(2)}
+              <strong>Total:</strong> ₹
+              {orderItem?.totalAmount * (83.25).toFixed(2)}
             </div>
           </CardContent>
           <CardFooter>
@@ -208,7 +209,8 @@ function AdminOrdersView() {
               </Badge>
             </div>
             <div>
-              <strong>Total:</strong> ${orderItem.totalAmount.toFixed(2)}
+              <strong>Total:</strong> ₹
+              {orderItem?.totalAmount * (83.25).toFixed(2)}
             </div>
           </CardContent>
           <div className="flex items-center justify-center">

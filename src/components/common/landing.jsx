@@ -47,7 +47,7 @@ const Landing = () => {
           {/* <img src="/icons/free-shipping.svg" alt="Free Shipping" className="mx-auto mb-4 w-12" /> */}
           <Truck className="mx-auto mb-4 w-12 h-12"/>
           <h3 className="text-xl font-semibold mb-2">Free Shipping</h3>
-          <p className="text-gray-600">On all orders above $50. Fast and reliable delivery.</p>
+          <p className="text-gray-600">On all orders above ₹200. Fast and reliable delivery.</p>
         </div>
         <div>
           {/* <img src="/icons/secure-payment.svg" alt="Secure Payment" className="mx-auto mb-4 w-12" /> */}

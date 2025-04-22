@@ -80,7 +80,7 @@ function UserCartItemContent({ getCartItems }) {
         </div>
         <div className="flex flex-col items-end ">
           <p className="font-semibold">
-            $
+          ₹
             {(
               (getCartItems?.salePrice > 0
                 ? getCartItems?.salePrice

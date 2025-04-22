@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
-import { Card, CardContent, CardHeader, CardTitle,CardFooter } from "../ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from "../ui/card";
 import { Dialog } from "../ui/dialog";
 import {
   Table,
@@ -36,71 +42,77 @@ function ShoppingOrders() {
 
   return (
     <>
-    <Card className="lg:block hidden">
-      <CardHeader>
-        <CardTitle>Order History</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Order ID</TableHead>
-              <TableHead>Order Date</TableHead>
-              <TableHead>Order Status</TableHead>
-              <TableHead>Order Price</TableHead>
-              <TableHead>
-                <span className="sr-only">Details</span>
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {orderList && orderList.length > 0
-              ? orderList.map((orderItem) => (
-                  <TableRow key={orderItem?._id}>
-                    <TableCell>{orderItem?._id}</TableCell>
-                    <TableCell>{orderItem?.orderDate.split("T")[0]}</TableCell>
-                    <TableCell>
-                      <Badge
-                        className={`py-1 px-3 ${
-                          orderItem?.orderStatus === "confirmed"
-                            ? "bg-green-500"
-                            : orderItem?.orderStatus === "rejected"
-                            ? "bg-red-600"
-                            : "bg-black"
-                        }`}
-                      >
-                        {orderItem?.orderStatus}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>${orderItem?.totalAmount.toFixed(2)}</TableCell>
-                    <TableCell>
-                      <Dialog
-                        open={openDetailsDialog}
-                        onOpenChange={() => {
-                          setOpenDetailsDialog(false);
-                          dispatch(resetOrderDetails());
-                        }}
-                      >
-                        <Button
-                        onClick={() =>
-                          handleFetchOrderDetails(orderItem?._id)
-                        }
+      <Card className="lg:block hidden">
+        <CardHeader>
+          <CardTitle>Order History</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Order ID</TableHead>
+                <TableHead>Order Date</TableHead>
+                <TableHead>Order Status</TableHead>
+                <TableHead>Order Price</TableHead>
+                <TableHead>
+                  <span className="sr-only">Details</span>
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {orderList && orderList.length > 0
+                ? orderList.map((orderItem) => (
+                    <TableRow key={orderItem?._id}>
+                      <TableCell>{orderItem?._id}</TableCell>
+                      <TableCell>
+                        {orderItem?.orderDate.split("T")[0]}
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          className={`py-1 px-3 ${
+                            orderItem?.orderStatus === "confirmed"
+                              ? "bg-green-500"
+                              : orderItem?.orderStatus === "rejected"
+                              ? "bg-red-600"
+                              : "bg-black"
+                          }`}
                         >
-                          View Details
-                        </Button>
-                        <ShoppingOrderDetailsView orderDetails={orderDetails} />
-                      </Dialog>
-                    </TableCell>
-                  </TableRow>
-                ))
-              : null}
-          </TableBody>
-        </Table>
-      </CardContent>
-    </Card>
+                          {orderItem?.orderStatus}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        ₹{orderItem?.totalAmount * (83.25).toFixed(2)}
+                      </TableCell>
+                      <TableCell>
+                        <Dialog
+                          open={openDetailsDialog}
+                          onOpenChange={() => {
+                            setOpenDetailsDialog(false);
+                            dispatch(resetOrderDetails());
+                          }}
+                        >
+                          <Button
+                            onClick={() =>
+                              handleFetchOrderDetails(orderItem?._id)
+                            }
+                          >
+                            View Details
+                          </Button>
+                          <ShoppingOrderDetailsView
+                            orderDetails={orderDetails}
+                          />
+                        </Dialog>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                : null}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
 
-    {/* Order Cards for mobile (≤640px) */}
-    {orderList?.map((orderItem) => (
+      {/* Order Cards for mobile (≤640px) */}
+      {orderList?.map((orderItem) => (
         <Card
           key={orderItem._id}
           className="block lg:hidden border p-4 rounded-lg shadow-sm bg-white space-y-2 m-2 min-w-[360px]"
@@ -127,7 +139,8 @@ function ShoppingOrders() {
               </Badge>
             </div>
             <div>
-              <strong>Total:</strong> ${orderItem.totalAmount.toFixed(2)}
+              <strong>Total:</strong> ₹
+              {orderItem?.totalAmount * (83.25).toFixed(2)}
             </div>
           </CardContent>
           <div className="flex items-center justify-center">

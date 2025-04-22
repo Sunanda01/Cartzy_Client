@@ -28,8 +28,10 @@ function ShoppingCheckout() {
           0
         )
       : 0;
-
+  const INR_TO_USD_RATE = 83.25;
+  const totalAmountInUSD = (totalCartAmount / INR_TO_USD_RATE);
   function handleInitiatePaypalPayment() {
+    console.log(totalAmountInUSD);
     if (cartItems?.items?.length === 0) {
       toast.info("Your cart is empty. Please add items to proceed");
       return;
@@ -63,7 +65,7 @@ function ShoppingCheckout() {
       orderStatus: "pending",
       paymentMethod: "paypal",
       paymentStatus: "pending",
-      totalAmount: totalCartAmount,
+      totalAmount: totalAmountInUSD,
       orderDate: new Date(),
       orderUpdateDate: new Date(),
       paymentId: "",
@@ -101,14 +103,20 @@ function ShoppingCheckout() {
           <div className="mt-8 space-y-4">
             <div className="flex justify-between">
               <span className="font-bold">Total</span>
-              <span className="font-bold">${totalCartAmount.toFixed(2)}</span>
+              <span className="font-bold">₹{totalCartAmount.toFixed(2)}</span>
+            </div>
+          </div>
+          <div className="mt-8 space-y-4">
+            <div className="flex justify-between">
+              <span className="font-bold">Total In USD</span>
+              <span className="font-bold">${totalAmountInUSD.toFixed(2)}</span>
             </div>
           </div>
           <div className="mt-4 w-full">
             <Button
               onClick={handleInitiatePaypalPayment}
               className={`${isPaymentStart ? "cursor-wait" : ""} w-full`}
-              disabled={isPaymentStart || (cartItems && cartItems.length===0)}
+              disabled={isPaymentStart || (cartItems && cartItems.length === 0)}
             >
               {isPaymentStart
                 ? "Processing Paypal Payment..."

@@ -47,7 +47,9 @@ function AdminOrderDetailsView({ adminOrderDetails }) {
           </div>
           <div className="flex mt-2 items-center justify-between">
             <p className="font-medium">Order Price</p>
-            <Label>${adminOrderDetails?.totalAmount}</Label>
+            <Label>
+              ₹{adminOrderDetails?.totalAmount * (83.25).toFixed(2)}
+            </Label>
           </div>
           <div className="flex mt-2 items-center justify-between">
             <p className="font-medium">Payment method</p>
@@ -61,7 +63,7 @@ function AdminOrderDetailsView({ adminOrderDetails }) {
             <p className="font-medium">Order Status</p>
             <Label>
               <Badge
-                className={`py-1 px-3 ${
+                className={`py-1 px-3 ₹{
                   adminOrderDetails?.orderStatus === "confirmed"
                     ? "bg-green-500"
                     : adminOrderDetails?.orderStatus === "rejected"
@@ -88,7 +90,7 @@ function AdminOrderDetailsView({ adminOrderDetails }) {
                     >
                       <span>Title: {item.title}</span>
                       <span>Quantity: {item.quantity}</span>
-                      <span>Price: ${item.price}</span>
+                      <span>Price: ₹{item.price}</span>
                     </li>
                   ))
                 : null}
