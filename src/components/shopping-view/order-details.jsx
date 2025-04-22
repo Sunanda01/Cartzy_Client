@@ -3,7 +3,7 @@ import { Badge } from "../ui/badge";
 import { DialogContent } from "../ui/dialog";
 import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
-
+import { Table, TableHead, TableHeader, TableRow } from "../ui/table";
 function ShoppingOrderDetailsView({ orderDetails }) {
   const { user } = useSelector((state) => state.auth);
 
@@ -53,18 +53,30 @@ function ShoppingOrderDetailsView({ orderDetails }) {
           <div className="grid gap-2">
             <div className="font-medium">Order Details</div>
             <ul className="grid gap-3">
-              {orderDetails?.cartItems && orderDetails?.cartItems.length > 0
-                ? orderDetails?.cartItems.map((item) => (
-                    <li
-                      className="flex items-center justify-between"
-                      key={item._id}
-                    >
-                      <span>Title: {item.title}</span>
-                      <span>Quantity: {item.quantity}</span>
-                      <span>Price: ₹{item.price}</span>
-                    </li>
-                  ))
-                : null}
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="font-bold  text-black">
+                      Title
+                    </TableHead>
+                    <TableHead className="font-bold text-black">
+                      Quantity
+                    </TableHead>
+                    <TableHead className="font-bold text-black">
+                      Price
+                    </TableHead>
+                  </TableRow>
+                  {orderDetails?.cartItems && orderDetails?.cartItems.length > 0
+                    ? orderDetails?.cartItems.map((item) => (
+                        <TableRow key={item._id}>
+                          <TableHead>{item.title}</TableHead>
+                          <TableHead>{item.quantity}</TableHead>
+                          <TableHead>₹{item.price}</TableHead>
+                        </TableRow>
+                      ))
+                    : null}
+                </TableHeader>
+              </Table>
             </ul>
           </div>
         </div>
