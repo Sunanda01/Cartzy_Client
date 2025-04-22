@@ -22,7 +22,9 @@ If you are developing a production application, we recommend using TypeScript an
 - Order Details
 - Error route -> Auto Redirect to Home Page
 
-<img src="./preview/poster.png" alt="Poster" /> <br/>
+<img src="./preview/poster.png" alt="Poster" />
+
+<br/>
 
 
 ## Quick Glimpses 
