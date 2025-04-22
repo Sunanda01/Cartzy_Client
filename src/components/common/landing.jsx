@@ -15,7 +15,7 @@ const Landing = () => {
             if(user?.role === 'admin') navigate('/admin/dashboard');
             else navigate('/shop/home');
         }
-    })
+    },[user,navigate])
   return (
     <div className="min-h-screen bg-white flex flex-col">
       {/* Hero Section */}
@@ -37,6 +37,7 @@ const Landing = () => {
           src="/cartzy.png" // replace with actual hero image
           alt="Fashion Models"
           className="w-full max-w-md rounded-2xl shadow-xl mb-10 lg:mb-0"
+          loading="lazy"
         />
       </section>
 
