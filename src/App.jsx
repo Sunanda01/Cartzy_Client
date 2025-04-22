@@ -26,6 +26,7 @@ import { setupInterceptors } from "./axiosInstance";
 import store from "./store/store";
 import AdminRoute from "./private/AdminRoute";
 import ProtectedRoute from "./private/ProtectedRoute";
+import Landing from "./components/common/landing";
 
 function App() {
   const { isLoading } = useSelector((state) => state.auth);
@@ -40,10 +41,10 @@ function App() {
   return (
     <div className="flex flex-col overflow-hidden bg-white">
       <Routes>
-        {/* <Route
+        <Route
           path="/"
-          element={<CheckAuth isAuthenticated={isAuthenticated} user={user} />}
-        /> */}
+          element={<Landing/>}
+        />
 
         <Route path="/auth" element={<AuthLayout />}>
           <Route path="login" element={<AuthLogin />} />
